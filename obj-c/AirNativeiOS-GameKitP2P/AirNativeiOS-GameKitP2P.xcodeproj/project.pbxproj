@@ -1,0 +1,245 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C90A9F551506368B00B74242 /* AirNativeiOS-GKImpl.h in Headers */ = {isa = PBXBuildFile; fileRef = C90A9F531506368B00B74242 /* AirNativeiOS-GKImpl.h */; };
+		C90A9F561506368B00B74242 /* AirNativeiOS-GKImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = C90A9F541506368B00B74242 /* AirNativeiOS-GKImpl.m */; };
+		C99E61C215050204005ABF52 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99E61C115050204005ABF52 /* Foundation.framework */; };
+		C99E61C815050204005ABF52 /* AirNativeiOS-GameKitP2P.m in Sources */ = {isa = PBXBuildFile; fileRef = C99E61C715050204005ABF52 /* AirNativeiOS-GameKitP2P.m */; };
+		C99E61CF1505023E005ABF52 /* FlashRuntimeExtensions.h in Frameworks */ = {isa = PBXBuildFile; fileRef = C99E61CE1505023E005ABF52 /* FlashRuntimeExtensions.h */; };
+		C99E61D115053A22005ABF52 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99E61D015053A22005ABF52 /* GameKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		C90A9F531506368B00B74242 /* AirNativeiOS-GKImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AirNativeiOS-GKImpl.h"; sourceTree = "<group>"; };
+		C90A9F541506368B00B74242 /* AirNativeiOS-GKImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AirNativeiOS-GKImpl.m"; sourceTree = "<group>"; };
+		C99E61BE15050204005ABF52 /* libAirNativeiOS-GameKitP2P.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAirNativeiOS-GameKitP2P.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C99E61C115050204005ABF52 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		C99E61C515050204005ABF52 /* AirNativeiOS-GameKitP2P-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AirNativeiOS-GameKitP2P-Prefix.pch"; sourceTree = "<group>"; };
+		C99E61C715050204005ABF52 /* AirNativeiOS-GameKitP2P.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AirNativeiOS-GameKitP2P.m"; sourceTree = "<group>"; };
+		C99E61CE1505023E005ABF52 /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FlashRuntimeExtensions.h; path = "../../../../../libraries/sdks/air3-2_p6_sdk_mac_022712/include/FlashRuntimeExtensions.h"; sourceTree = "<group>"; };
+		C99E61D015053A22005ABF52 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C99E61BB15050204005ABF52 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C99E61D115053A22005ABF52 /* GameKit.framework in Frameworks */,
+				C99E61CF1505023E005ABF52 /* FlashRuntimeExtensions.h in Frameworks */,
+				C99E61C215050204005ABF52 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C99E61B315050204005ABF52 = {
+			isa = PBXGroup;
+			children = (
+				C99E61D015053A22005ABF52 /* GameKit.framework */,
+				C99E61C315050204005ABF52 /* AirNativeiOS-GameKitP2P */,
+				C99E61C015050204005ABF52 /* Frameworks */,
+				C99E61BF15050204005ABF52 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C99E61BF15050204005ABF52 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C99E61BE15050204005ABF52 /* libAirNativeiOS-GameKitP2P.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C99E61C015050204005ABF52 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C99E61CE1505023E005ABF52 /* FlashRuntimeExtensions.h */,
+				C99E61C115050204005ABF52 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C99E61C315050204005ABF52 /* AirNativeiOS-GameKitP2P */ = {
+			isa = PBXGroup;
+			children = (
+				C99E61C715050204005ABF52 /* AirNativeiOS-GameKitP2P.m */,
+				C99E61C415050204005ABF52 /* Supporting Files */,
+				C90A9F531506368B00B74242 /* AirNativeiOS-GKImpl.h */,
+				C90A9F541506368B00B74242 /* AirNativeiOS-GKImpl.m */,
+			);
+			path = "AirNativeiOS-GameKitP2P";
+			sourceTree = "<group>";
+		};
+		C99E61C415050204005ABF52 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C99E61C515050204005ABF52 /* AirNativeiOS-GameKitP2P-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		C99E61BC15050204005ABF52 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C90A9F551506368B00B74242 /* AirNativeiOS-GKImpl.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		C99E61BD15050204005ABF52 /* AirNativeiOS-GameKitP2P */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C99E61CB15050204005ABF52 /* Build configuration list for PBXNativeTarget "AirNativeiOS-GameKitP2P" */;
+			buildPhases = (
+				C99E61BA15050204005ABF52 /* Sources */,
+				C99E61BB15050204005ABF52 /* Frameworks */,
+				C99E61BC15050204005ABF52 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "AirNativeiOS-GameKitP2P";
+			productName = "AirNativeiOS-GameKitP2P";
+			productReference = C99E61BE15050204005ABF52 /* libAirNativeiOS-GameKitP2P.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C99E61B515050204005ABF52 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C99E61B815050204005ABF52 /* Build configuration list for PBXProject "AirNativeiOS-GameKitP2P" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = C99E61B315050204005ABF52;
+			productRefGroup = C99E61BF15050204005ABF52 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C99E61BD15050204005ABF52 /* AirNativeiOS-GameKitP2P */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C99E61BA15050204005ABF52 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C99E61C815050204005ABF52 /* AirNativeiOS-GameKitP2P.m in Sources */,
+				C90A9F561506368B00B74242 /* AirNativeiOS-GKImpl.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C99E61C915050204005ABF52 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		C99E61CA15050204005ABF52 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C99E61CC15050204005ABF52 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/AirNativeiOS_GameKitP2P.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AirNativeiOS-GameKitP2P/AirNativeiOS-GameKitP2P-Prefix.pch";
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		C99E61CD15050204005ABF52 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/AirNativeiOS_GameKitP2P.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AirNativeiOS-GameKitP2P/AirNativeiOS-GameKitP2P-Prefix.pch";
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C99E61B815050204005ABF52 /* Build configuration list for PBXProject "AirNativeiOS-GameKitP2P" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C99E61C915050204005ABF52 /* Debug */,
+				C99E61CA15050204005ABF52 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C99E61CB15050204005ABF52 /* Build configuration list for PBXNativeTarget "AirNativeiOS-GameKitP2P" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C99E61CC15050204005ABF52 /* Debug */,
+				C99E61CD15050204005ABF52 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C99E61B515050204005ABF52 /* Project object */;
+}
