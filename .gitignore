@@ -1,0 +1,36 @@
+# Build and Release Folders
+bin-debug/
+bin-release/
+bin/
+libs/
+
+# Project property files
+.actionScriptProperties
+.flexProperties
+.flexLibProperties
+.settings/
+.project
+
+# Eclipse
+.metadata
+
+# Other
+*.zip
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+*.ipa
+
+# XCode related / http://stackoverflow.com/questions/49478/git-ignore-file-for-xcode-projects
+*.swp
+*~.nib
+
+## build/ #include this
+*.pbxuser
+*.perspective
+*.perspectivev3
+*.mode1v3
+*.mode2v3
+xcuserdata
+
