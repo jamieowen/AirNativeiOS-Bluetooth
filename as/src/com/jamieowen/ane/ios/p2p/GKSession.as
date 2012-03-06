@@ -53,13 +53,13 @@ package com.jamieowen.ane.ios.p2p {
 		//--//////////////////////////////////////////////////
 		//--//// WORKING WITH CONNECTED PEERS
 		
-		public function get disconnectTimeout():uint
+		public function get disconnectTimeout():Number
 		{
-			return _p2p.context.call( "gkSession_get_disconnectTimeout") as uint;
+			return _p2p.context.call( "gkSession_get_disconnectTimeout") as Number;
 		}
 		
 
-		public function set disconnectTimeout( $timeout:uint ):void
+		public function set disconnectTimeout( $timeout:Number ):void
 		{
 			_p2p.context.call( "gkSession_set_disconnectTimeout", $timeout );
 		}
@@ -96,9 +96,9 @@ package com.jamieowen.ane.ios.p2p {
 		//--//////////////////////////////////////////////////
 		//--//// OBTAINING INFORMATION ABOUT PEERS
 		
-		public function peersWithConnectionState():Vector.<String>
+		public function peersWithConnectionState( $state:uint = GKPeerConnectionState.AVAILABLE ):Vector.<String>
 		{
-			return _p2p.context.call( "gkSession_peersWithConnectionState") as Vector.<String>;
+			return _p2p.context.call( "gkSession_peersWithConnectionState", $state ) as Vector.<String>;
 		}
 		
 		
@@ -110,7 +110,7 @@ package com.jamieowen.ane.ios.p2p {
 		//--//////////////////////////////////////////////////
 		//--//// CONNECTING TO A REMOTE PEER
 		
-		public function connectToPeer($peerID:String, $timeout:uint):void
+		public function connectToPeer($peerID:String, $timeout:Number):void
 		{
 			_p2p.context.call( "gkSession_connectToPeer", $peerID, $timeout );
 		}
@@ -197,15 +197,6 @@ package com.jamieowen.ane.ios.p2p {
 			_p2p = null;
 		}
 		
-		/**
-		 * The native extension stores the last NSError object for the last method call here. If an error has been thrown it will be here for the duration of method call.
-		 * @return An object with "code" and "message" properties populated with contents from NSError.code and NSError.localizedDescription respectively.
-		 */
-		private function getLastNSError():Object
-		{
-			return _p2p.context.call( "gkSession_getLastNSError" );
-		}
-		
 		//--//////////////////////////////////////////////////
 		//--//// EVENT HANDLERS
 		
@@ -227,16 +218,23 @@ package com.jamieowen.ane.ios.p2p {
 					break;
 					
 				case GKSessionErrorEvent.CONNECTION_WITH_PEER_FAILED :
-					peerID = $event.level;
-					error = getLastNSError();
-					if( error ) dispatchEvent( new GKSessionErrorEvent(GKSessionErrorEvent.CONNECTION_WITH_PEER_FAILED, error["code"], error["message"]));
+					// parse error
+					args = $event.level.split("{&}");
+					peerID = args[0]; 
+					error = {};
+					error["code"] = args[1];
+					error["message"] = args[2];
 					
+					dispatchEvent( new GKSessionErrorEvent(GKSessionErrorEvent.CONNECTION_WITH_PEER_FAILED, error["code"], error["message"],peerID));
 					break;
 					
 				case GKSessionErrorEvent.DID_FAIL_WITH_ERROR :
-					error = getLastNSError();
-					if( error ) dispatchEvent( new GKSessionErrorEvent(GKSessionErrorEvent.DID_FAIL_WITH_ERROR, error["code"], error["message"]));
+					args = $event.level.split("{&}");
+					error = {};
+					error["code"] = args[0];
+					error["message"] = args[1];					
 					
+					dispatchEvent( new GKSessionErrorEvent(GKSessionErrorEvent.DID_FAIL_WITH_ERROR, error["code"], error["message"]));
 					break;
 					
 				case GKSessionEvent.DID_RECEIVE_CONNECTION_REQUEST_FROM_PEER :

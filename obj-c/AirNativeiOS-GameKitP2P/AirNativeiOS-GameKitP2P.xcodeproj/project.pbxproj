@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C90A9F551506368B00B74242 /* AirNativeiOS-GKImpl.h in Headers */ = {isa = PBXBuildFile; fileRef = C90A9F531506368B00B74242 /* AirNativeiOS-GKImpl.h */; };
 		C90A9F561506368B00B74242 /* AirNativeiOS-GKImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = C90A9F541506368B00B74242 /* AirNativeiOS-GKImpl.m */; };
+		C90A9F591506626400B74242 /* AirNativeiOS-AirStatusEventCodes.h in Headers */ = {isa = PBXBuildFile; fileRef = C90A9F581506626400B74242 /* AirNativeiOS-AirStatusEventCodes.h */; };
 		C99E61C215050204005ABF52 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C99E61C115050204005ABF52 /* Foundation.framework */; };
 		C99E61C815050204005ABF52 /* AirNativeiOS-GameKitP2P.m in Sources */ = {isa = PBXBuildFile; fileRef = C99E61C715050204005ABF52 /* AirNativeiOS-GameKitP2P.m */; };
 		C99E61CF1505023E005ABF52 /* FlashRuntimeExtensions.h in Frameworks */ = {isa = PBXBuildFile; fileRef = C99E61CE1505023E005ABF52 /* FlashRuntimeExtensions.h */; };
@@ -18,11 +19,12 @@
 /* Begin PBXFileReference section */
 		C90A9F531506368B00B74242 /* AirNativeiOS-GKImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AirNativeiOS-GKImpl.h"; sourceTree = "<group>"; };
 		C90A9F541506368B00B74242 /* AirNativeiOS-GKImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AirNativeiOS-GKImpl.m"; sourceTree = "<group>"; };
+		C90A9F581506626400B74242 /* AirNativeiOS-AirStatusEventCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AirNativeiOS-AirStatusEventCodes.h"; sourceTree = "<group>"; };
 		C99E61BE15050204005ABF52 /* libAirNativeiOS-GameKitP2P.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAirNativeiOS-GameKitP2P.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C99E61C115050204005ABF52 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C99E61C515050204005ABF52 /* AirNativeiOS-GameKitP2P-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AirNativeiOS-GameKitP2P-Prefix.pch"; sourceTree = "<group>"; };
 		C99E61C715050204005ABF52 /* AirNativeiOS-GameKitP2P.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AirNativeiOS-GameKitP2P.m"; sourceTree = "<group>"; };
-		C99E61CE1505023E005ABF52 /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FlashRuntimeExtensions.h; path = "../../../../../libraries/sdks/air3-2_p6_sdk_mac_022712/include/FlashRuntimeExtensions.h"; sourceTree = "<group>"; };
+		C99E61CE1505023E005ABF52 /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FlashRuntimeExtensions.h; path = "../../../../../../libraries/sdks/air3-2_p6_sdk_mac_022712/include/FlashRuntimeExtensions.h"; sourceTree = "<group>"; };
 		C99E61D015053A22005ABF52 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -61,7 +63,6 @@
 		C99E61C015050204005ABF52 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C99E61CE1505023E005ABF52 /* FlashRuntimeExtensions.h */,
 				C99E61C115050204005ABF52 /* Foundation.framework */,
 			);
 			name = Frameworks;
@@ -74,6 +75,7 @@
 				C99E61C415050204005ABF52 /* Supporting Files */,
 				C90A9F531506368B00B74242 /* AirNativeiOS-GKImpl.h */,
 				C90A9F541506368B00B74242 /* AirNativeiOS-GKImpl.m */,
+				C90A9F581506626400B74242 /* AirNativeiOS-AirStatusEventCodes.h */,
 			);
 			path = "AirNativeiOS-GameKitP2P";
 			sourceTree = "<group>";
@@ -81,6 +83,7 @@
 		C99E61C415050204005ABF52 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				C99E61CE1505023E005ABF52 /* FlashRuntimeExtensions.h */,
 				C99E61C515050204005ABF52 /* AirNativeiOS-GameKitP2P-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -94,6 +97,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C90A9F551506368B00B74242 /* AirNativeiOS-GKImpl.h in Headers */,
+				C90A9F591506626400B74242 /* AirNativeiOS-AirStatusEventCodes.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

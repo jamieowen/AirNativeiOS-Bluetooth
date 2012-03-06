@@ -17,13 +17,13 @@ AirNativeiOS_GKImpl* gkImpl;
 
 FREObject gkp2p_createGKSession(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[] )
 {
-    //currentSession = nil;
+    [ gkImpl createSession ];
     return NULL;
-    
 }
 
 FREObject gkp2p_createGKPeerPickerController(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[] )
 {
+    [ gkImpl createPicker ];
     return NULL;
 }
 
@@ -32,94 +32,291 @@ FREObject gkp2p_createGKPeerPickerController(FREContext ctx, void* funcData, uin
 
 FREObject gkSession_get_available(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
-    //, Boolean
-    return NULL;
+    if( !gkImpl.isSessionOK ) return NULL;
+        
+    uint32_t available = gkImpl.currentSession.available == true ? 1 : 0;
+    FREObject result = nil;
+    FRENewObjectFromBool(available, &result);
+    return result;
 }
 
 FREObject gkSession_set_available(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
+    if( !gkImpl.isSessionOK ) return NULL;
     
-    //, available:Boolean
+    uint32_t available = 0;
+    FREGetObjectAsBool( argv[0], &available );
+    
+    gkImpl.currentSession.available = available == 1 ? true : false;
     return NULL;
 }
 
 FREObject gkSession_get_displayName(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
-    //, String
-    return NULL;
+    if( !gkImpl.isSessionOK ) return NULL;
+    
+    NSString* str = gkImpl.currentSession.displayName;
+    const char *chars = [str UTF8String];
+    FREObject result;
+    FRENewObjectFromUTF8( strlen(chars)+1, (const uint8_t*)chars, &result);
+    
+    return result;
 }
 
 FREObject gkSession_get_peerID(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
-    //, String
-    return NULL;
+    if( !gkImpl.isSessionOK ) return NULL;
+    
+    NSString* str = gkImpl.currentSession.peerID;
+    const char *chars = [str UTF8String];
+    FREObject result;
+    FRENewObjectFromUTF8( strlen(chars)+1, (const uint8_t*)chars, &result);
+    
+    return result;
 }
 
 FREObject gkSession_get_sessionID(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
-    //, String
-    return NULL;
+    if( !gkImpl.isSessionOK ) return NULL;
+    
+    NSString* str = gkImpl.currentSession.sessionID;
+    const char *chars = [str UTF8String];
+    FREObject result;
+    FRENewObjectFromUTF8( strlen(chars)+1, (const uint8_t*)chars, &result);
+    
+    return result;
 }
 
 FREObject gkSession_get_sessionMode(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
-    //, String
-    return NULL;
+    if( !gkImpl.isSessionOK ) return NULL;
+    
+    NSString* str;
+    switch( gkImpl.currentSession.sessionMode )
+    {
+        case GKSessionModeClient :
+            str = @"GKSessionModeClient";
+            break;
+        case GKSessionModeServer :
+            str = @"GKSessionModeServer";
+            break;
+        case GKSessionModePeer :
+            str = @"GKSessionModePeer";
+            break;
+    }
+    const char *chars = [str UTF8String];
+    FREObject result;
+    FRENewObjectFromUTF8( strlen(chars)+1, (const uint8_t*)chars, &result);
+    
+    return result;
 }
 
 FREObject gkSession_get_disconnectTimeout(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
-    //, uint
-    return NULL;
+    if( !gkImpl.isSessionOK ) return NULL;
+    
+    double interval = gkImpl.currentSession.disconnectTimeout;
+    FREObject result;
+    FRENewObjectFromDouble( interval, &result );
+    
+    return result;
 }
 
 FREObject gkSession_set_disconnectTimeout(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
-    //, timeout:uint    
+    if( !gkImpl.isSessionOK ) return NULL;
+    
+    double interval;
+    FREGetObjectAsDouble(argv[0], &interval);
+    gkImpl.currentSession.disconnectTimeout = interval;
     return NULL;
 }
 
 
 FREObject gkSession_initWithSessionID(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
+    if( !gkImpl.isSessionOK ) return NULL;
+    
     //    , displayName:String, sessionMode:uint
+    
+    uint32_t sessionIDLen;
+    const uint8_t *sessionIDChars;   
+    FREGetObjectAsUTF8(argv[0], &sessionIDLen, &sessionIDChars );
+    
+    uint32_t nameLen;
+    const uint8_t *name;   
+    FREGetObjectAsUTF8(argv[1], &nameLen, &name );
+    
+    NSString *sessionID = [NSString stringWithUTF8String:(char*)sessionIDChars];
+    NSString *displayName = [NSString stringWithUTF8String:(char*)name];
+    
+    uint32_t sessionMode;
+    FREGetObjectAsUint32(argv[2], &sessionMode);
+    
+    /** Actionscript consts:
+     public static const SERVER:uint 		= 0;
+     public static const CLIENT:uint 		= 1;
+     public static const PEER:uint 			= 2;    
+     ***/
+    switch( sessionMode )
+    {
+        case 0 :
+            [ gkImpl.currentSession initWithSessionID:sessionID displayName:displayName sessionMode:GKSessionModeServer ];
+            break;
+        case 1 :
+            [ gkImpl.currentSession initWithSessionID:sessionID displayName:displayName sessionMode:GKSessionModeClient ];
+            break;
+        case 2 :
+            [ gkImpl.currentSession initWithSessionID:sessionID displayName:displayName sessionMode:GKSessionModePeer ];
+            break;
+    }
+    
     return NULL;
 }
 
 FREObject gkSession_peersWithConnectionState(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
-    //returns Vector<String>
+    if( !gkImpl.isSessionOK ) return NULL;
+    
+    uint32_t state;
+    FREGetObjectAsUint32( argv[0], &state );
+    
+    /**
+     Actionscript GKPeerConnectionState values:
+     public static const AVAILABLE:uint 	= 0;
+     public static const CONNECTED:uint 	= 1;
+     public static const CONNECTING:uint 	= 2;
+     public static const DISCONNECTED:uint 	= 3;
+     public static const UNAVAILABLE:uint	= 4;
+     **/
+    
+    NSArray* peers;
+    
+    switch( state )
+    {
+        case 0 :
+            peers = [ gkImpl.currentSession peersWithConnectionState:GKPeerStateAvailable ];
+            break;
+        case 1 :
+            peers = [ gkImpl.currentSession peersWithConnectionState:GKPeerStateConnected ];
+            break;
+        case 2 :
+            peers = [ gkImpl.currentSession peersWithConnectionState:GKPeerStateConnecting ];
+            break;
+        case 3 :
+            peers = [ gkImpl.currentSession peersWithConnectionState:GKPeerStateDisconnected ];
+            break;
+        case 4 :
+            peers = [ gkImpl.currentSession peersWithConnectionState:GKPeerStateUnavailable ];
+            break;
+    }
+    
+    // convert to Actionscript Vector.<String>
+    
+    FREObject resultVector;
+    FRENewObject((const uint8_t*)"Vector.<String>", 0, NULL, &resultVector, nil);
+    // set the vector length
+    uint32_t vecLength = (uint32_t) [peers count];
+    FRESetArrayLength( &resultVector, vecLength);
+    
+    // set values
+    FREObject peerID;
+    uint32_t peerIDLen;
+    const uint8_t *peerIDChars;
+    
+    /**
+    for( NSUInteger i = 0; i<vecLength; i++ )
+    {
+        FRENewObjectFromUTF8(<#uint32_t length#>, <#const uint8_t *value#>, <#FREObject *object#>)
+    }
+     **/
+    
     return NULL;
 }
 
 FREObject gkSession_displayNameForPeer(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
-    //peerId:String, returns String
-    return NULL;
+    if( !gkImpl.isSessionOK ) return NULL;
+
+    uint32_t peerIDLen;
+    const uint8_t *peerIDChars;   
+    FREGetObjectAsUTF8(argv[0], &peerIDLen, &peerIDChars );
+    
+    NSString *peerID = [NSString stringWithUTF8String:(char*)peerIDChars];
+    
+    NSString *displayName = [ gkImpl.currentSession displayNameForPeer:peerID ];
+
+    const char *chars = [displayName UTF8String];
+    FREObject result;
+    FRENewObjectFromUTF8( strlen(chars)+1, (const uint8_t*)chars, &result);
+    
+    return result;
 }
 
 FREObject gkSession_connectToPeer(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
-    //, peerId:String, timeOut:uint
+    if( !gkImpl.isSessionOK ) return NULL;
+    
+    uint32_t peerIDLen;
+    const uint8_t *peerIDChars;   
+    FREGetObjectAsUTF8(argv[0], &peerIDLen, &peerIDChars );
+    NSString *peerID = [NSString stringWithUTF8String:(char*)peerIDChars];
+    
+    double interval;
+    FREGetObjectAsDouble(argv[1], &interval);
+    gkImpl.currentSession.disconnectTimeout = interval;
+    
+    [ gkImpl.currentSession connectToPeer:peerID withTimeout:interval ];
+    
     return NULL;
 }
 
 FREObject gkSession_cancelConnectToPeer(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
-    //, peerId:String, 
+    if( !gkImpl.isSessionOK ) return NULL;
+    
+    uint32_t peerIDLen;
+    const uint8_t *peerIDChars;   
+    FREGetObjectAsUTF8(argv[0], &peerIDLen, &peerIDChars );
+    NSString *peerID = [NSString stringWithUTF8String:(char*)peerIDChars];
+    
+    [ gkImpl.currentSession cancelConnectToPeer:peerID ];
+    
     return NULL;
 }
 
 FREObject gkSession_acceptConnectionFromPeer(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
     //peerId:String, returns Boolean
-    return NULL;
+    if( !gkImpl.isSessionOK ) return NULL;
+    
+    uint32_t peerIDLen;
+    const uint8_t *peerIDChars;   
+    FREGetObjectAsUTF8(argv[0], &peerIDLen, &peerIDChars );
+    NSString *peerID = [NSString stringWithUTF8String:(char*)peerIDChars];
+    
+    // ******
+    // TODO : Need to handle error here
+    BOOL success= [ gkImpl.currentSession acceptConnectionFromPeer:peerID error:nil ];
+    
+    uint32_t successInt = success == true ? 1 : 0;
+    FREObject result;
+    FRENewObjectFromBool( successInt, &result);
+    
+    return result;
 }
 
 
 FREObject gkSession_denyConnectionFromPeer(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
-    //peerId:String
+    if( !gkImpl.isSessionOK ) return NULL;
+    
+    uint32_t peerIDLen;
+    const uint8_t *peerIDChars;   
+    FREGetObjectAsUTF8(argv[0], &peerIDLen, &peerIDChars );
+    NSString *peerID = [NSString stringWithUTF8String:(char*)peerIDChars];
+    
+    [ gkImpl.currentSession denyConnectionFromPeer:peerID ];
     return NULL;
 }
 
@@ -138,79 +335,90 @@ FREObject gkSession_sendDataToAllPeers(FREContext ctx, void* funcData, uint32_t 
 
 FREObject gkSession_disconnectFromAllPeers(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
+    if( !gkImpl.isSessionOK ) return NULL;
+    
+    [ gkImpl.currentSession disconnectFromAllPeers ];
     return NULL;
 }
 
 FREObject gkSession_disconnectPeerFromAllPeers(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
-    //peerID:String
+    if( !gkImpl.isSessionOK ) return NULL;
+    
+    uint32_t peerIDLen;
+    const uint8_t *peerIDChars;   
+    FREGetObjectAsUTF8(argv[0], &peerIDLen, &peerIDChars );
+    NSString *peerID = [NSString stringWithUTF8String:(char*)peerIDChars];
+    
+    [ gkImpl.currentSession disconnectPeerFromAllPeers:peerID ];
+    
     return NULL;
 }
 
 
-FREObject gkSession_getLastNSError(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
-{
+//FREObject gkSession_getLastNSError(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
+//{
     //Object{message:"",code:""}
-    return NULL;
-}
+//    return NULL;
+//}
 
 FREObject gkSession_dispose(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
+    if( !gkImpl.isSessionOK ) return NULL;
+    
+    [ gkImpl disposeSession ];
     return NULL;
 }
 
-
-///////////////////////////////////////////////////////////////
-////////////// GKSessionDelegate
-
-//AS3 event types - as defined in GKSessionEvent
-//gkSessionConnectionWithPeerFailed
-//gkSessionDidFailWithError
-//gkSessionChangeState
-//gkSessionDidReceiveConnectionRequestFromPeer
-//gkSessionDataReceived
 
 ///////////////////////////////////////////////////////////////
 ////////////// GKPeerPickerController
 
 FREObject gkPeerPickerController_show(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
+    if( !gkImpl.isPickerOK ) return NULL;
+    
+    [ gkImpl.currentPicker show ];
     return NULL;
 }
 
 FREObject gkPeerPickerController_dismiss(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
+    if( !gkImpl.isPickerOK ) return NULL;
+    
+    [ gkImpl.currentPicker dismiss ];
     return NULL;
 }
 
-FREObject gkPeerPickerController_get_connectionTypesMask(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
-{
+//FREObject gkPeerPickerController_get_connectionTypesMask(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
+//{
     //returns uint
-    return NULL;
-}
+//    return NULL;
+//}
 
-FREObject gkPeerPickerController_set_connectionTypesMask(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
-{
-    return NULL;
-}
+//FREObject gkPeerPickerController_set_connectionTypesMask(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
+//{
+//    return NULL;
+//}
 
 FREObject gkPeerPickerController_get_visible(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
-    return NULL;
+    if( !gkImpl.isPickerOK ) return NULL;
+    
+    uint32_t visible = gkImpl.currentPicker.visible == true ? 1 : 0;
+    FREObject result = nil;
+    FRENewObjectFromBool(visible, &result);
+    return result;
 }
 
 FREObject gkPeerPickerController_dispose(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
+    if( !gkImpl.isPickerOK ) return NULL;
+    
+    [ gkImpl disposePicker ];
     return NULL;
 }
 
-
-///////////////////////////////////////////////////////////////
-////////////// GKPeerPickerControllerDelegate
-
-//AS3 event types - as defined in GKPeerPickerControllerDelegate
-//gkPeerPickerDidConnectPeer
-//gkPeerPickerControllerDidCancel
 
 ///////////////////////////////////////////////////////////////
 ////////////// AirNative Required Initializers
@@ -222,7 +430,10 @@ void ContextInitializer(void* extData, const uint8_t* ctxType,
                                FREContext ctx,
                                uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet )
 {
-    *numFunctionsToTest = 29;
+    // create the gamekit delegate
+    gkImpl = [[AirNativeiOS_GKImpl alloc] initWithContext:ctx];
+    
+    *numFunctionsToTest = 26;
     
     FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction)*29);
     
@@ -316,37 +527,37 @@ void ContextInitializer(void* extData, const uint8_t* ctxType,
     func[20].functionData = NULL;
     func[20].function     = &gkSession_disconnectPeerFromAllPeers;
     
-    func[21].name         = (const uint8_t*) "gkSession_getLastNSError";
+    //func[21].name         = (const uint8_t*) "gkSession_getLastNSError";
+    //func[21].functionData = NULL;
+    //func[21].function     = &gkSession_getLastNSError;
+    
+    func[21].name         = (const uint8_t*) "gkSession_dispose";
     func[21].functionData = NULL;
-    func[21].function     = &gkSession_getLastNSError;
+    func[21].function     = &gkSession_dispose;
     
-    func[22].name         = (const uint8_t*) "gkSession_dispose";
+    func[22].name         = (const uint8_t*) "gkPeerPickerController_show";
     func[22].functionData = NULL;
-    func[22].function     = &gkSession_dispose;
+    func[22].function     = &gkPeerPickerController_show;
     
-    func[23].name         = (const uint8_t*) "gkPeerPickerController_show";
+    func[23].name         = (const uint8_t*) "gkPeerPickerController_dismiss";
     func[23].functionData = NULL;
-    func[23].function     = &gkPeerPickerController_show;
+    func[23].function     = &gkPeerPickerController_dismiss;
     
-    func[24].name         = (const uint8_t*) "gkPeerPickerController_dismiss";
+    //func[25].name         = (const uint8_t*) "gkPeerPickerController_get_connectionTypesMask";
+    //func[25].functionData = NULL;
+    //func[25].function     = &gkPeerPickerController_get_connectionTypesMask;
+    
+    //func[26].name         = (const uint8_t*) "gkPeerPickerController_set_connectionTypesMask";
+    //func[26].functionData = NULL;
+    //func[26].function     = &gkPeerPickerController_set_connectionTypesMask;
+    
+    func[24].name         = (const uint8_t*) "gkPeerPickerController_get_visible";
     func[24].functionData = NULL;
-    func[24].function     = &gkPeerPickerController_dismiss;
+    func[24].function     = &gkPeerPickerController_get_visible;
     
-    func[25].name         = (const uint8_t*) "gkPeerPickerController_get_connectionTypesMask";
+    func[25].name         = (const uint8_t*) "gkPeerPickerController_dispose";
     func[25].functionData = NULL;
-    func[25].function     = &gkPeerPickerController_get_connectionTypesMask;
-    
-    func[26].name         = (const uint8_t*) "gkPeerPickerController_set_connectionTypesMask";
-    func[26].functionData = NULL;
-    func[26].function     = &gkPeerPickerController_set_connectionTypesMask;
-    
-    func[27].name         = (const uint8_t*) "gkPeerPickerController_get_visible";
-    func[27].functionData = NULL;
-    func[27].function     = &gkPeerPickerController_get_visible;
-    
-    func[28].name         = (const uint8_t*) "gkPeerPickerController_dispose";
-    func[28].functionData = NULL;
-    func[28].function     = &gkPeerPickerController_dispose;
+    func[25].function     = &gkPeerPickerController_dispose;
     
     *functionsToSet = func;
 }
@@ -362,7 +573,10 @@ void ContextFinalizer(FREContext ctx) {
     
     NSLog(@"Entering ContextFinalizer()");
     
-    // Nothing to clean up.
+    // clean up GKImpl
+    [ gkImpl disposePicker ];
+    [ gkImpl disposeSession ];
+    [ gkImpl release ];
     
     NSLog(@"Exiting ContextFinalizer()");
     
