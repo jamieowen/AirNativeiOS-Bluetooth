@@ -1,6 +1,14 @@
 package com.jamieowen.ane.ios.p2p {
 	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
+	
+	
+	[Event(name="gkSessionChangeState", type="com.jamieowen.ane.ios.p2p.GKSessionEvent")]
+	
+	[Event(name="gkSessionDidReceiveConnectionRequestFromPeer", type="com.jamieowen.ane.ios.p2p.GKSessionEvent")]
+	
+	[Event(name="gkSessionDataReceived", type="com.jamieowen.ane.ios.p2p.GKSessionEvent")]
+	
 	/**
 	* Mirrors the iOS GKSession object.
 	*
@@ -129,8 +137,9 @@ package com.jamieowen.ane.ios.p2p {
 			var result:Boolean = _p2p.context.call( "gkSession_acceptConnectionFromPeer", $peerID ) as Boolean;
 			if( !result )
 			{
-				var error:Object = getLastNSError();
-				if( error ) dispatchEvent( new GKSessionErrorEvent(GKSessionErrorEvent.ACCEPT_CONNECTION_ERROR,error["code"], error["message"], $peerID ));
+				// TODO : HANDLE ERROR CORRECTLY
+				//var error:Object = getLastNSError();
+				//if( error ) dispatchEvent( new GKSessionErrorEvent(GKSessionErrorEvent.ACCEPT_CONNECTION_ERROR,error["code"], error["message"], $peerID ));
 			}
 			
 			return result;
@@ -154,8 +163,9 @@ package com.jamieowen.ane.ios.p2p {
 			var result:Boolean = _p2p.context.call( "gkSession_sendData", $data, $peers, $dataMode  ) as Boolean; 
 			if( !result )
 			{
-				var error:Object = getLastNSError();
-				if( error ) dispatchEvent( new GKSessionErrorEvent(GKSessionErrorEvent.SEND_DATA_ERROR, error["code"], error["message"]));
+			// TODO : HANDLE ERROR CORRECTLY.
+			//	var error:Object = getLastNSError();
+			//	if( error ) dispatchEvent( new GKSessionErrorEvent(GKSessionErrorEvent.SEND_DATA_ERROR, error["code"], error["message"]));
 			}
 			
 			return result;
@@ -168,8 +178,9 @@ package com.jamieowen.ane.ios.p2p {
 			var result:Boolean = _p2p.context.call( "gkSession_sendDataToAllPeers", $data, $dataMode  ) as Boolean;
 			if( !result )
 			{
-				var error:Object = getLastNSError();
-				if( error ) dispatchEvent( new GKSessionErrorEvent(GKSessionErrorEvent.SEND_DATA_TO_ALL_ERROR,error["code"], error["message"]));
+			// TODO : HANDLE ERROR CORRECTLY.
+			//	var error:Object = getLastNSError();
+			//	if( error ) dispatchEvent( new GKSessionErrorEvent(GKSessionErrorEvent.SEND_DATA_TO_ALL_ERROR,error["code"], error["message"]));
 			}
 			
 			return result;
@@ -189,7 +200,7 @@ package com.jamieowen.ane.ios.p2p {
 		//--//////////////////////////////////////////////////
 		//--//// DISPOSE
 		
-		internal function dispose():void
+		public function dispose():void
 		{
 			_p2p.context.call( "gkSession_dispose");
 			_p2p.context.removeEventListener( StatusEvent.STATUS, onExtensionContextStatus );
@@ -247,7 +258,7 @@ package com.jamieowen.ane.ios.p2p {
 					args = $event.level.split("{&}");
 					peerID = args[0];
 					var data:String = args[1];
-					dispatchEvent( new GKSessionEvent(GKSessionEvent.DATA_RECEIVED, peerID, -1, data ));
+					dispatchEvent( new GKSessionEvent(GKSessionEvent.DATA_RECEIVED, peerID, 0, data ));
 					
 					break;
 			}

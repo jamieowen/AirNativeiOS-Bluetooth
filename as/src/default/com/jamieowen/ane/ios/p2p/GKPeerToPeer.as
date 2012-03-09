@@ -8,30 +8,23 @@ package com.jamieowen.ane.ios.p2p {
 	*/
 	public class GKPeerToPeer
 	{
-		/** Used to prevent instantiation of GKSession or GKPeerPickerController objects outside this class.**/
-		internal static var CREATE_GK_OBJECTS:Boolean = false;
-		
-		private static const EXTENSION_ID:String = "com.jamieowen.ane.ios.p2p.GameKitP2P";
-		
-		private var _context:ExtensionContext;
-		
-		private var _session:GKSession;
-		
-		private var _picker:GKPeerPickerController;
 		
 		internal function get context():ExtensionContext
 		{
-			return _context;
+			// stub
+			return null;
 		}
 		
 		public function get picker():GKPeerPickerController
 		{
-			return _picker;	
+			// stub
+			return null;
 		}
 		
 		public function get session():GKSession
 		{
-			return _session;
+			// stub
+			return null;
 		}
 		
 		/**
@@ -39,7 +32,7 @@ package com.jamieowen.ane.ios.p2p {
 		*/
 		public function GKPeerToPeer()
 		{
-			_context = ExtensionContext.createExtensionContext( EXTENSION_ID, null );
+		
 		}
 		
 		/**
@@ -47,15 +40,8 @@ package com.jamieowen.ane.ios.p2p {
 		 */
 		public function createGKSession():GKSession
 		{
-			if( _session ) return _session;
-			
-			CREATE_GK_OBJECTS = true;
-			_session = new GKSession(this);
-			CREATE_GK_OBJECTS = false;
-			
-			_context.call( "gkp2p_createGKSession");
-			
-			return _session;
+			// stub
+			return null;
 		}
 		
 		/**
@@ -69,30 +55,20 @@ package com.jamieowen.ane.ios.p2p {
 		 */
 		public function createGKPeerPickerController():GKPeerPickerController
 		{
-			if( _session ) throw new Error("An existing session is open. Dispose the session before creating a GKPeerPickerController");
-			
-			if( _picker ) return _picker;
-			
-			CREATE_GK_OBJECTS = true;
-			_picker  = new GKPeerPickerController(this);
-			CREATE_GK_OBJECTS = false;
-			
-			// init the controller.
-			_context.call( "gkp2p_createGKPeerPickerController");
-			
-			return _picker;
+			// stub
+			return null;
 		}
 		
 		/** Used to set the GKSession from the GKPeerPickerController object ( when a user connects via the iOS ui ). Or when calling dispose() on the GKSession object.**/
 		internal function setGKSession( $session:GKSession ):void
 		{
-			_session = $session;
+			// stub
 		}
 		
 		/** Used when calling dispose() on the GKPeerPickerController object.**/
 		internal function setGKPeerPickerController( $picker:GKPeerPickerController ):void
 		{
-			_picker = $picker;
+			// stub
 		}
 		
 		/**
@@ -100,15 +76,7 @@ package com.jamieowen.ane.ios.p2p {
 		 */
 		public function dispose():void
 		{
-			if( _picker ) _picker.dispose();
-			if( _session ) _session.dispose();
-			
-			_context.dispose();
-			_context = null;
+			// stub
 		}
-		
-		
-
-		
 	}
 }

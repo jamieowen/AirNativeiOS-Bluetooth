@@ -1,0 +1,11 @@
+# AS code for different ANE platforms.
+
+This is a mirror of the GKSession and GKPeerPickerController classes in iOS
+
+The "default" platform classes contain enums and event classes plus stub code for the
+GKSession/GKPeerPickerController/GKPeerToPeer classes which would normally perform the core native extension
+communication logic.
+
+The iOS platform contains the actual implementation of the GKSession/GKPeerPickerController/GKPeerToPeer classes.
+
+They are linked together at comile time with the ANT script found in /build.

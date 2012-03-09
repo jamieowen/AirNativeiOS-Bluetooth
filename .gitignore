@@ -26,6 +26,9 @@ Thumbs.db
 *.swp
 *~.nib
 
+obj-c/AirNativeiOS-GameKitP2P/build/
+*.app.dSYM
+
 ## build/ #include this
 *.pbxuser
 *.perspective

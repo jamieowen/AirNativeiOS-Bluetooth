@@ -31,6 +31,7 @@
     [self disposePicker];
     
     self.airContext = nil;
+    [super dealloc];
 }
 
 -(BOOL) isSessionOK
@@ -173,6 +174,7 @@
     
     // dispatch event to AIR extension context.]
     FREDispatchStatusEventAsync(airContext,airStatusEvent_gkSessionDataReceived, (uint8_t*) [message UTF8String] );
+    //FREDispatchStatusEventAsync(<#FREContext ctx#>, <#const uint8_t *code#>, <#const uint8_t *level#>)
 }
 
 -(void)session:(GKSession *)session connectionWithPeerFailed:(NSString *)peerID withError:(NSError *)error

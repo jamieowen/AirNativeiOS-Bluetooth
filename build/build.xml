@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="AirNativeiOS-GameKitP2P" default="all">
+	
+	<property file="build.config"/>
+	<property file="${provisioning.config}"/>
+
+	<target name="all" depends="xcode,default,ios,ane" description="Full build of extension"/>
+	
+	<target name="xcode" description="Build iOS Library">
+		<!--<mkdir dir="../temp/ios/build/"/>
+		<exec executable="xcodebuild" failonerror="true" dir="../ios/${name}IosExtension">
+			<arg line='-project ${name}IosExtension.xcodeproj'/>
+			<arg line='-target ${name}IosExtension'/>
+			<arg line='-configuration Release'/>
+			<arg line='SYMROOT=../../temp/ios/build/'/>
+		</exec>!-->
+		
+		<!-- don't build with xcode just yet - just copy from release folder !-->
+		<copy file="../obj-c/AirNativeiOS-GameKitP2P/build/Release-iphoneos/lib${project.name}.a" todir="../temp/ios" overwrite="true"/>
+		
+		<!--<delete dir="../temp/ios/build/"/>!-->
+	</target>
+	
+	<!-- build default first !-->
+	<target name="default" description="build default swc">
+		<mkdir dir="../temp/default/"/>
+		
+		<fileset dir="../as/src/default/" casesensitive="yes" id="classfiles2">
+			<include name="**/*.as"/>
+		</fileset>
+
+		<pathconvert property="classlist2" refid="classfiles2" pathsep=" " dirsep=".">
+			<regexpmapper from=".*default.(.*)\.as" to="\1"/>
+		</pathconvert>
+		
+		<exec executable="${sdk.air}/bin/compc" failonerror="true">
+			<arg line='-source-path ../as/src/default'/>
+			<arg line='-output ../temp/default/${project.name}.swc'/>
+			<!--<arg line='-swf-version=13'/>!-->
+			<arg line='-external-library-path+="${sdk.air}/frameworks/libs/air/airglobal.swc"'/>
+			<!--<arg line='-library-path+="../libs/"'/>!-->
+			<arg line='-include-classes ${classlist2}'/>
+		</exec>
+
+		<unzip src="../temp/default/${project.name}.swc" dest="../temp/default/unpack" overwrite="true"/>
+		<copy file="../temp/default/unpack/library.swf" todir="../temp/default" overwrite="true"/>
+
+		<!-- use default swc as primary swc !-->
+		<copy file="../temp/default/${project.name}.swc" todir="../temp/bin"/>
+
+		<delete dir="../temp/default/unpack"/>
+		<delete file="../temp/default/${project.name}.swc"/>
+	</target>
+
+	<!-- build ios platform next !-->
+	<target name="ios" description="build ios swc">
+		<mkdir dir="../temp/ios/"/>
+
+		<mkdir dir="../temp/ios/src"/>
+
+		<!-- copy default code to temp, then overwrite with ios code impls!-->
+		<copy todir="../temp/ios/src" overwrite="true">
+			<fileset dir="../as/src/default"/>
+		</copy>
+		<copy todir="../temp/ios/src" overwrite="true">
+			<fileset dir="../as/src/ios"/>
+		</copy>
+
+		<fileset dir="../temp/ios/src" casesensitive="yes" id="classfiles">
+			<include name="**/*.as"/>
+		</fileset>
+
+		<pathconvert property="classlist" refid="classfiles" pathsep=" " dirsep=".">
+			<regexpmapper from=".*src.(.*)\.as" to="\1"/>
+		</pathconvert>
+		
+		<exec executable="${sdk.air}/bin/compc" failonerror="true">
+			<arg line='-source-path ../temp/ios/src'/>
+			<arg line='-output ../temp/ios/${project.name}.swc'/>
+			<!--<arg line='-swf-version=13'/>!-->
+			<arg line='-external-library-path+="${sdk.air}/frameworks/libs/air/airglobal.swc"'/>
+			<!--<arg line='-library-path+="../libs/"'/>!-->
+			<arg line='-include-classes ${classlist}'/>
+		</exec>
+
+		<unzip src="../temp/ios/${project.name}.swc" dest="../temp/ios/unpack" overwrite="true"/>
+		<copy file="../temp/ios/unpack/library.swf" todir="../temp/ios" overwrite="true"/>
+
+		<delete dir="../temp/ios/src/"/>
+		<delete dir="../temp/ios/unpack/"/>
+		<delete file="../temp/ios/${project.name}.swc"/>
+	</target>
+	
+
+	
+	<target name="ane" description="Create the extension package">
+		<exec executable="${sdk.air}/bin/adt" failonerror="true" dir="../temp">
+			<arg value="-package"/>
+			<!--<arg value="-storetype"/>
+			<arg value="pkcs12"/>
+			<arg value="-keystore"/>
+			<arg value="${keystore.file}"/>
+			<arg value="-storepass"/>
+			<arg value="${keystore.password}"/>!-->
+			<arg value="-target"/>
+			<arg value="ane"/>
+			<arg value="bin/${project.name}.ane"/>
+			<arg value="../build/extension.xml"/>
+			<arg line="-swc bin/${project.name}.swc"/>
+			<arg line="-platform iPhone-ARM -platformoptions ../build/platform.xml -C ios/ ."/>
+			<arg line="-platform default -C default/ ."/>
+		</exec>
+		
+		<copy file="../temp/bin/${project.name}.ane" todir="../bin"/>
+		<copy file="../temp/bin/${project.name}.swc" todir="../bin"/>
+
+		<!-- update examples !-->
+		<copy file="../temp/bin/${project.name}.ane" todir="../examples/GameKitP2PExample/lib"/>
+		<copy file="../temp/bin/${project.name}.swc" todir="../examples/GameKitP2PExample/lib"/>		
+
+		<delete dir="../temp"/>
+	</target>
+</project>

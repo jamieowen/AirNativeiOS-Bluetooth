@@ -2,6 +2,10 @@ package com.jamieowen.ane.ios.p2p {
 	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
 	
+	[Event(name="gkPeerPickerDidConnectPeer", type="com.jamieowen.ane.ios.p2p.GKPeerPickerControllerEvent")]
+	
+	[Event(name="gkPeerPickerControllerDidCancel", type="com.jamieowen.ane.ios.p2p.GKPeerPickerControllerEvent")]
+	
 	/**
 	* Class Description
 	*
@@ -52,7 +56,7 @@ package com.jamieowen.ane.ios.p2p {
 			return _p2p.context.call( "gkPeerPickerController_get_visible") as Boolean;
 		}
 		
-		internal function dispose():void
+		public function dispose():void
 		{
 			_p2p.context.call( "gkPeerPickerController_dispose");
 			_p2p.context.removeEventListener( StatusEvent.STATUS, onExtensionContextStatus );

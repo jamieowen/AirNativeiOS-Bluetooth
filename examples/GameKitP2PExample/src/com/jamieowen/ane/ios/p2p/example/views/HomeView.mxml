@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		title="HomeView">
+		
+	<s:layout>
+		<s:VerticalLayout />
+	</s:layout>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+
+	<fx:Script>
+		<![CDATA[
+			import com.jamieowen.ane.ios.p2p.GKPeerPickerController;
+			import com.jamieowen.ane.ios.p2p.GKPeerPickerControllerEvent;
+			import com.jamieowen.ane.ios.p2p.GKPeerToPeer;
+			import com.jamieowen.ane.ios.p2p.GKSendDataMode;
+
+			private var p2p:GKPeerToPeer;
+			private var picker:GKPeerPickerController;
+			
+			private function createPicker() : void
+			{
+				p2p = new GKPeerToPeer();
+				picker = p2p.createGKPeerPickerController();
+				picker.addEventListener(GKPeerPickerControllerEvent.DID_CONNECT_PEER, onPeerPickerEvent );
+				picker.addEventListener(GKPeerPickerControllerEvent.CONTROLLER_DID_CANCEL, onPeerPickerEvent );
+
+				picker.show();
+			}
+			
+			private function sendMessage():void
+			{
+				if(p2p && p2p.session && p2p.session.available )
+				{
+					p2p.session.sendDataToAllPeers( messageInput.text, GKSendDataMode.RELIABLE );
+				}
+			}
+			
+			protected function onPeerPickerEvent( $event:GKPeerPickerControllerEvent ):void
+			{
+				switch( $event.type )
+				{
+					case GKPeerPickerControllerEvent.DID_CONNECT_PEER :
+						peerID.text = $event.peerID;
+						break;
+					case GKPeerPickerControllerEvent.CONTROLLER_DID_CANCEL :
+						
+						break;
+				}
+				
+				// clear & dispose the picker!
+				picker.dismiss();
+				picker.dispose();
+			}
+		]]>
+	</fx:Script>
+
+
+	<s:Button label="Create Picker" click="createPicker()"/>
+	<s:Label width="100%" id="peerID"/>
+	<s:TextInput id="messageInput" text="Message"/>
+	<s:Button click="sendMessage()" label="Send"/>
+	
+</s:View>

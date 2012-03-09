@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<platform xmlns="http://ns.adobe.com/air/extension/3.1">
+
+	<!-- The version of iOS SDK that the app should be linked with. Optional. -->
+	<sdkVersion>4.0</sdkVersion>
+
+	<!-- Options that should be passed to the linker. Optional. -->
+	<linkerOptions>
+		<option>-ios_version_min 4.0</option>
+		<option>-framework GameKit</option>
+	</linkerOptions>
+</platform>

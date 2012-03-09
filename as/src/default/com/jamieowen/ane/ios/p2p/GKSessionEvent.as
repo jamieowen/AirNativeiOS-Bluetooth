@@ -16,7 +16,6 @@ package com.jamieowen.ane.ios.p2p
 		// (equivalent to GKSession.setDataReceiveHandler)
 		public static const DATA_RECEIVED:String							= "gkSessionDataReceived";
 		
-		
 		public var peerID:String;
 		
 		// session state / passed with DID_CHANGE_STATE
@@ -28,7 +27,7 @@ package com.jamieowen.ane.ios.p2p
 		/**
 		* An event to handle all error and standard events.
 		*/
-		public function GKSessionEvent($type:String, $peerID:String, $sessionState:uint = -1, $data:String = null )
+		public function GKSessionEvent($type:String, $peerID:String, $sessionState:uint = 0, $data:String = null )
 		{
 			super($type);
 			

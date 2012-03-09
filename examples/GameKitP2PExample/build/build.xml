@@ -1,0 +1,66 @@
+<project name="BuildExample" default="all">
+
+    <!-- include ane compile settings !-->
+    <property file="../../../build/build.config"/>
+
+    <!-- main provisioning props in here !-->
+    <property file="${provisioning.config}"/>
+   
+    <target name="all" depends="buildswf,ipatest" description="Full build of example"/>
+
+    <target name="buildswf">
+        <exec executable="${sdk.air}/bin/mxmlc" failonerror="true">
+            <arg value="-output"/>
+            <arg value="../bin/${project.name}Example.swf"/>
+
+            <arg value="-source-path+=../src"/>
+            
+            <arg value="-library-path+=../lib"/>
+
+            <arg value="-load-config"/>
+            <arg value="${sdk.air}/frameworks/airmobile-config.xml"/>
+
+            <arg value="../src/com/jamieowen/ane/ios/p2p/example/GameKitP2PExample.mxml"/>
+
+        </exec>
+    </target>
+
+    <target name="ipatest">
+
+        <mkdir dir="ios"/>
+
+        <exec executable="${sdk.air}/bin/adt" failonerror="true">
+            <arg value="-package"/>
+
+            <arg value="-target"/>
+            <arg value="ipa-test"/>
+
+            <arg value="-provisioning-profile"/>
+            <arg value="${provisioning.wildcard}"/>
+
+            <arg value="-storetype"/>
+            <arg value="pkcs12"/>
+            <arg value="-keystore"/>
+            <arg value="${keystore.file}"/>
+            <arg value="-storepass"/>
+            <arg value="${keystore.password}"/>
+
+            <!-- output ipa and source app descriptor !-->
+            <arg value="ios/${project.name}Example.ipa"/>
+            <arg value="../bin/GameKitP2PExample-app.xml"/>
+
+            <!-- ANE !-->
+            <arg value="-extdir"/>
+            <arg value="../lib"/>
+
+            <!-- bundle contents !-->
+            <arg value="-C"/> <!-- -C uses the proceeding path for the named assets !-->
+            <arg value="../bin"/>
+            <arg value="${project.name}Example.swf"/>
+
+            <!-- IPhone SDK for ANE !-->
+            <arg value="-platformsdk"/>
+            <arg value="${sdk.ios}"/>
+        </exec>
+    </target>
+</project>
