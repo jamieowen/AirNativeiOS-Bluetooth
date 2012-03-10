@@ -98,7 +98,7 @@
     
     // dispatch event to AIR extension context
     FREDispatchStatusEventAsync( airContext, airStatusEvent_gkPeerPickerDidConnectPeer, (uint8_t*) [peerID UTF8String] );
-    
+
     // the AIR side should dispose the picker now
 }
 
@@ -173,8 +173,7 @@
     }
     
     // dispatch event to AIR extension context.]
-    FREDispatchStatusEventAsync(airContext,airStatusEvent_gkSessionDataReceived, (uint8_t*) [message UTF8String] );
-    //FREDispatchStatusEventAsync(<#FREContext ctx#>, <#const uint8_t *code#>, <#const uint8_t *level#>)
+    //FREDispatchStatusEventAsync(airContext,airStatusEvent_gkSessionDataReceived, (uint8_t*) [message UTF8String] );
 }
 
 -(void)session:(GKSession *)session connectionWithPeerFailed:(NSString *)peerID withError:(NSError *)error
@@ -187,13 +186,13 @@
     [ message appendString:error.description ];
     
     // dispatch event to AIR extension context.
-    FREDispatchStatusEventAsync(airContext,airStatusEvent_gkSessionDidReceiveConnectionRequestFromPeer, (uint8_t*) [message UTF8String] );
+    //FREDispatchStatusEventAsync(airContext,airStatusEvent_gkSessionDidReceiveConnectionRequestFromPeer, (uint8_t*) [message UTF8String] );
 }
 
 -(void)session:(GKSession *)session didReceiveConnectionRequestFromPeer:(NSString *)peerID
 {
     // dispatch event to AIR extension context.
-    FREDispatchStatusEventAsync(airContext,airStatusEvent_gkSessionDidReceiveConnectionRequestFromPeer, (uint8_t*) [peerID UTF8String] );
+    //FREDispatchStatusEventAsync(airContext,airStatusEvent_gkSessionDidReceiveConnectionRequestFromPeer, (uint8_t*) [peerID UTF8String] );
 }
 
 -(void)session:(GKSession *)session didFailWithError:(NSError *)error
@@ -203,7 +202,7 @@
     [ message appendString:error.description ];
     
     // dispatch event to AIR extension context.
-    FREDispatchStatusEventAsync(airContext,airStatusEvent_gkSessionDidReceiveConnectionRequestFromPeer, (uint8_t*) [message UTF8String] );
+    //FREDispatchStatusEventAsync(airContext,airStatusEvent_gkSessionDidReceiveConnectionRequestFromPeer, (uint8_t*) [message UTF8String] );
 }
 
 @end

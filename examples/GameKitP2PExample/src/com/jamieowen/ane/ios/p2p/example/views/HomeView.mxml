@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		title="HomeView">
-		
+		title="iOS AIR Bluetooth Example">
+
 	<s:layout>
-		<s:VerticalLayout />
-	</s:layout>
+		<s:VerticalLayout/>
+	</s:layout>	
+
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 
 	<fx:Script>
 		<![CDATA[
+			import caurina.transitions.Tweener;
+			import com.jamieowen.ane.ios.p2p.GKSessionEvent;
 			import com.jamieowen.ane.ios.p2p.GKPeerPickerController;
 			import com.jamieowen.ane.ios.p2p.GKPeerPickerControllerEvent;
 			import com.jamieowen.ane.ios.p2p.GKPeerToPeer;
@@ -22,45 +25,211 @@
 			
 			private function createPicker() : void
 			{
-				p2p = new GKPeerToPeer();
+				if( p2p == null )
+					p2p = new GKPeerToPeer();
+					
+				if( picker ) return;
+				
 				picker = p2p.createGKPeerPickerController();
-				picker.addEventListener(GKPeerPickerControllerEvent.DID_CONNECT_PEER, onPeerPickerEvent );
-				picker.addEventListener(GKPeerPickerControllerEvent.CONTROLLER_DID_CANCEL, onPeerPickerEvent );
-
-				picker.show();
+				picker.addEventListener(GKPeerPickerControllerEvent.DID_CONNECT_PEER, onGKPeerPickerControllerEvent, false, 0, true );
+				picker.addEventListener(GKPeerPickerControllerEvent.CONTROLLER_DID_CANCEL, onGKPeerPickerControllerEvent, false, 0, true );
+				
+				status.text = "createPicker()";
+				
 			}
 			
-			private function sendMessage():void
+			private function showPicker():void
 			{
-				if(p2p && p2p.session && p2p.session.available )
+				if( picker ) 
 				{
-					p2p.session.sendDataToAllPeers( messageInput.text, GKSendDataMode.RELIABLE );
+					status.text = "showPicker()";
+					picker.show();
+				}
+				
+			}
+			private function dismissPicker():void
+			{
+				if( picker )
+				{
+					status.text = "dismissPicker()";
+					picker.dismiss();
+				}
+			}
+			private function disposePicker():void
+			{
+				if( picker )
+				{
+					status.text = "disposePicker()";
+					picker.dismiss();
+					picker.dispose();
+					picker.removeEventListener(GKPeerPickerControllerEvent.DID_CONNECT_PEER, onGKPeerPickerControllerEvent );
+					picker.removeEventListener(GKPeerPickerControllerEvent.CONTROLLER_DID_CANCEL, onGKPeerPickerControllerEvent );
+				}
+
+				// set ref to null - no more calling
+				picker = null;
+	
+			}
+			
+			private function sendMessage($message:String):void
+			{
+				if(p2p && p2p.session )
+				{
+					status.text = "send";
+					var success:Boolean = p2p.session.sendDataToAllPeers( $message, GKSendDataMode.RELIABLE );
+					status.text = "sendMessage:" + $message + ", result:" + success;
+					
 				}
 			}
 			
-			protected function onPeerPickerEvent( $event:GKPeerPickerControllerEvent ):void
+			private function disposeSession():void
 			{
+				if( p2p.session )
+				{
+					p2p.session.removeEventListener( GKSessionEvent.DATA_RECEIVED, onGKSessionEvent );
+				}
+			}
+			
+			protected function onGKPeerPickerControllerEvent( $event:GKPeerPickerControllerEvent ):void
+			{
+				status.text = "onPeerPickerEvent()";
+				peerID.text = "";
+				
+				// dismiss and dispose - if the controller only cancelled, then you could just dismiss if the user was likely to choose again.
+				disposePicker();
+				
 				switch( $event.type )
 				{
 					case GKPeerPickerControllerEvent.DID_CONNECT_PEER :
+						pickerResult.text = "connected";
 						peerID.text = $event.peerID;
+						
+						// session is now accessible -
+						p2p.session.addEventListener( GKSessionEvent.DATA_RECEIVED, onGKSessionEvent );
+						p2p.session.addEventListener( StatusEvent.STATUS, onStatusEvent );
+
 						break;
 					case GKPeerPickerControllerEvent.CONTROLLER_DID_CANCEL :
-						
+						pickerResult.text = "cancelled";
 						break;
 				}
 				
-				// clear & dispose the picker!
-				picker.dismiss();
-				picker.dispose();
+				
+			}
+			
+			private var _updateSlider:Boolean = true;
+			private function sliderChange():void
+			{
+				if( _updateSlider ) sendMessage( "slider_" + slider.value );
+			}
+			
+			private var tween1:Function = function():void { Tweener.addTween( this, { animateCircle:200, time:60, useFrames:true, transition:"easeInOutCubic", onComplete:tween2} ); };
+			private var tween2:Function = function():void { Tweener.addTween( this, { animateCircle:0, time:60, useFrames:true, transition:"easeInOutCubic", onComplete:tween1} ); };
+			
+			private var _tweening:Boolean = false;
+			private function changeTween():void
+			{
+				if( _tweening )
+				{
+					Tweener.removeAllTweens();
+					tweenButton.label = "Start";
+					animateCircle = 0;
+				}else
+				{
+					tween1();
+					tweenButton.label = "Stop";
+				}
+				_tweening = !_tweening;
+			}
+			
+			private var _updateCircle:Boolean = true;
+			public function set animateCircle( $position:uint ):void
+			{
+				tween.value = $position;
+				
+				if( _updateCircle )
+				{
+					sendMessage( "tween_" + tween.value );
+				}
+			}
+			
+			public function get animateCircle():uint
+			{
+				return tween.value;
+			}
+			
+			protected function onStatusEvent( $event:StatusEvent ):void
+			{
+				// Status Events will be removed in final build
+				exstatus.text = "ane/ios:" + $event.level;
+			}
+			
+			protected function onGKSessionEvent($event:GKSessionEvent):void
+			{
+				status.text = "onGKSessionEvent()";
+				var value:uint = 0;
+				switch( $event.type )
+				{
+					case GKSessionEvent.DATA_RECEIVED :
+						
+						peerID.text = $event.peerID;
+						dataResult.text = $event.data;
+						
+						if( $event.data.indexOf("slider_") == 0 )
+						{
+							
+							try{
+								value = parseInt( $event.data.split("slider_")[1], 10 ); 
+							}catch(error:Error){}
+							
+							_updateSlider = false; // don't send the message back
+							slider.value = value;
+							_updateSlider = true;
+						}else
+						if( $event.data.indexOf("tween_") == 0 )
+						{
+							if( _tweening ) changeTween(); // cancel the tween if its running on this side.
+							
+							try{
+								value = parseInt( $event.data.split("tween_")[1]); 
+							}catch(error:Error){}
+							
+							_updateCircle = false; // don't send the message back
+							animateCircle = value;
+							_updateCircle = true;
+							
+						}
+						
+						break;
+				}
 			}
 		]]>
 	</fx:Script>
-
-
-	<s:Button label="Create Picker" click="createPicker()"/>
-	<s:Label width="100%" id="peerID"/>
-	<s:TextInput id="messageInput" text="Message"/>
-	<s:Button click="sendMessage()" label="Send"/>
-	
+		<s:Label width="100%" id="exstatus" text="(extstatus)"/>
+		<s:Label width="100%" id="status" text="(status)"/>
+		<s:HGroup width="100%">
+			<s:Button label="Create" click="createPicker()"/>
+			<s:Button label="Show" click="showPicker()"/>
+			<s:Button label="Dismiss" click="dismissPicker()"/>
+			<s:Button label="Dispose" click="disposePicker()"/>
+		</s:HGroup>
+		<s:Label width="100%" id="pickerResult" text="(picker result)"/>
+		<s:HGroup width="100%">
+			<s:Label text="Peer Id:"/>
+			<s:Label width="100%" id="peerID"/>
+		</s:HGroup>
+		<s:HGroup width="100%">
+			<s:TextInput id="messageInput" text="Message" width="100%"/>
+			<s:Button click="{sendMessage(messageInput.text);}" label="Send"/>
+		</s:HGroup>
+		<s:HGroup width="100%">
+			<s:Label text="received:"/>
+			<s:Label width="100%" id="dataResult" text=""/>
+		</s:HGroup>
+		
+		<s:HSlider id="slider" width="100%" value="0" stepSize="1" minimum="0" maximum="200" change="sliderChange()"/>
+		<s:HGroup width="100%">
+			<s:Button click="changeTween()" id="tweenButton" label="Start" />
+			<s:HSlider id="tween" enabled="false" width="100%" value="0" minimum="0" maximum="200"/>
+		</s:HGroup>
 </s:View>

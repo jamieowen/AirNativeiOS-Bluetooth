@@ -16,7 +16,9 @@
 		</exec>!-->
 		
 		<!-- don't build with xcode just yet - just copy from release folder !-->
-		<copy file="../obj-c/AirNativeiOS-GameKitP2P/build/Release-iphoneos/lib${project.name}.a" todir="../temp/ios" overwrite="true"/>
+		<copy file="../obj-c/AirNativeiOS-GameKitP2P/build/Debug-iphoneos/lib${project.name}.a" todir="../temp/ios" overwrite="true"/>
+
+		<!--<copy file="../obj-c/AirNativeiOS-GameKitP2P/build/Release-iphoneos/lib${project.name}.a" todir="../temp/ios" overwrite="true"/>!-->
 		
 		<!--<delete dir="../temp/ios/build/"/>!-->
 	</target>

@@ -17,6 +17,7 @@ package com.jamieowen.ane.ios.p2p {
 	public class GKSession extends EventDispatcher
 	{
 		private var _p2p:GKPeerToPeer;
+		private var _disposed:Boolean;
 		
 		//--//////////////////////////////////////////////////
 		//--//// GETTERS/SETTERS
@@ -27,11 +28,15 @@ package com.jamieowen.ane.ios.p2p {
 			
 		public function get available():Boolean
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return false; }
+			
 			return _p2p.context.call( "gkSession_get_available") as Boolean;
 		}
 		
 		public function set available($available:Boolean):void
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return; }
+			
 			_p2p.context.call( "gkSession_set_available", $available ); 
 		}
 		
@@ -40,21 +45,29 @@ package com.jamieowen.ane.ios.p2p {
 		
  		public function get displayName():String
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return ""; }
+			
 			return _p2p.context.call( "gkSession_get_displayName") as String;
 		}
   		
 		public function get peerID():String
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return ""; }
+			
 			return _p2p.context.call( "gkSession_get_peerID") as String;
 		}
 		
   		public function get sessionID():String
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return ""; }
+			
 			return _p2p.context.call( "gkSession_get_sessionID") as String;
 		}
 		
 		public function get sessionMode():String
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return ""; }
+			
 			return _p2p.context.call( "gkSession_get_sessionMode") as String;
 		}
 		
@@ -63,12 +76,16 @@ package com.jamieowen.ane.ios.p2p {
 		
 		public function get disconnectTimeout():Number
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return 0; }
+			
 			return _p2p.context.call( "gkSession_get_disconnectTimeout") as Number;
 		}
 		
 
 		public function set disconnectTimeout( $timeout:Number ):void
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return; }
+			
 			_p2p.context.call( "gkSession_set_disconnectTimeout", $timeout );
 		}
 				
@@ -79,10 +96,10 @@ package com.jamieowen.ane.ios.p2p {
 		*/
 		public function GKSession( $p2p:GKPeerToPeer )
 		{
-			if( !GKPeerToPeer.CREATE_GK_OBJECTS ) throw new Error("GKSession objects must be instantiated via a GKPeerToPeer object");
+			if( !GKPeerToPeer.CREATE_GK_OBJECTS ) { throw new Error("GKSession objects must be instantiated via a GKPeerToPeer object"); return; }
 			
+			_disposed = false;
 			_p2p = $p2p;
-			
 			_p2p.context.addEventListener( StatusEvent.STATUS, onExtensionContextStatus );
 		}
 		
@@ -95,6 +112,8 @@ package com.jamieowen.ane.ios.p2p {
 		
 		public function initWithSessionID( $id:String, $displayName:String, $sessionMode:uint = GKSessionMode.PEER ):void
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return; }
+			
 			if( $sessionMode != GKSessionMode.CLIENT || $sessionMode != GKSessionMode.PEER || $sessionMode != GKSessionMode.SERVER )
 				throw new Error( "Invalid sessionMode type");
 				
@@ -106,12 +125,16 @@ package com.jamieowen.ane.ios.p2p {
 		
 		public function peersWithConnectionState( $state:uint = GKPeerConnectionState.AVAILABLE ):Vector.<String>
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return null; }
+			
 			return _p2p.context.call( "gkSession_peersWithConnectionState", $state ) as Vector.<String>;
 		}
 		
 		
 		public function displayNameForPeer($peerID:String):String
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return ""; }
+			
 			return _p2p.context.call( "gkSession_displayNameForPeer", $peerID ) as String;
 		}
 		
@@ -120,11 +143,15 @@ package com.jamieowen.ane.ios.p2p {
 		
 		public function connectToPeer($peerID:String, $timeout:Number):void
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return; }
+			
 			_p2p.context.call( "gkSession_connectToPeer", $peerID, $timeout );
 		}
 		
 		public function cancelConnectToPeer($peerID:String):void
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return; }
+			
 			_p2p.context.call( "gkSession_cancelConnectToPeer", $peerID );
 		}
 		
@@ -133,6 +160,8 @@ package com.jamieowen.ane.ios.p2p {
 		
 		public function acceptConnectionFromPeer( $peerID:String ):Boolean
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return false; }
+			
 			// if the result is false - an error should be thrown - this is not supported yet.
 			var result:Boolean = _p2p.context.call( "gkSession_acceptConnectionFromPeer", $peerID ) as Boolean;
 			if( !result )
@@ -148,6 +177,8 @@ package com.jamieowen.ane.ios.p2p {
 
 		public function denyConnectionFromPeer( $peerID:String ):void
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return; }
+			
 			_p2p.context.call( "gkSession_denyConnectionFromPeer", $peerID );
 		}
 		
@@ -156,6 +187,8 @@ package com.jamieowen.ane.ios.p2p {
 		
 		public function sendData( $data:String, $peers:Vector.<String>, $dataMode:uint = GKSendDataMode.RELIABLE ):Boolean
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return false; }
+			
 			if( $peers == null ) throw new Error( "Peers cannot be null");
 			else if( $dataMode != GKSendDataMode.RELIABLE || $dataMode != GKSendDataMode.UNRELIABLE ) throw new Error( "Invalid dataMode");
 			
@@ -173,9 +206,12 @@ package com.jamieowen.ane.ios.p2p {
 		
 		public function sendDataToAllPeers( $data:String, $dataMode:uint = GKSendDataMode.RELIABLE ):Boolean
 		{
-			if( $dataMode != GKSendDataMode.RELIABLE || $dataMode != GKSendDataMode.UNRELIABLE ) throw new Error( "Invalid dataMode");
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return false; }
 			
+			if( $dataMode != GKSendDataMode.RELIABLE && $dataMode != GKSendDataMode.UNRELIABLE ) throw new Error( "Invalid dataMode");
+			 
 			var result:Boolean = _p2p.context.call( "gkSession_sendDataToAllPeers", $data, $dataMode  ) as Boolean;
+			
 			if( !result )
 			{
 			// TODO : HANDLE ERROR CORRECTLY.
@@ -189,11 +225,15 @@ package com.jamieowen.ane.ios.p2p {
 		
 		public function disconnectFromAllPeers():void
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return; }
+			
 			_p2p.context.call( "gkSession_disconnectFromAllPeers");
 		}
 		
 		public function disconnectPeerFromAllPeers( $peerID:String ):void
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return; }
+			
 			_p2p.context.call( "gkSession_disconnectPeerFromAllPeers", $peerID );
 		}
 
@@ -202,6 +242,8 @@ package com.jamieowen.ane.ios.p2p {
 		
 		public function dispose():void
 		{
+			if( _disposed ) { throw new Error("GKSession has been disposed"); return; }
+			
 			_p2p.context.call( "gkSession_dispose");
 			_p2p.context.removeEventListener( StatusEvent.STATUS, onExtensionContextStatus );
 			_p2p.setGKSession(null);
@@ -213,6 +255,9 @@ package com.jamieowen.ane.ios.p2p {
 		
 		protected function onExtensionContextStatus( $event:StatusEvent ):void
 		{ 
+			// for debugging
+			dispatchEvent( $event );
+			
 			var peerID:String;
 			var error:Object;
 			var args:Array;
@@ -256,8 +301,8 @@ package com.jamieowen.ane.ios.p2p {
 					
 				case GKSessionEvent.DATA_RECEIVED :
 					args = $event.level.split("{&}");
-					peerID = args[0];
-					var data:String = args[1];
+					peerID = args[1];
+					var data:String = args[0];
 					dispatchEvent( new GKSessionEvent(GKSessionEvent.DATA_RECEIVED, peerID, 0, data ));
 					
 					break;

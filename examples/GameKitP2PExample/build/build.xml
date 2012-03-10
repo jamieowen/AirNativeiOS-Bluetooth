@@ -33,7 +33,8 @@
             <arg value="-package"/>
 
             <arg value="-target"/>
-            <arg value="ipa-test"/>
+            <arg value="ipa-debug-interpreter"/>
+            <!--<arg value="ipa-test"/>!-->
 
             <arg value="-provisioning-profile"/>
             <arg value="${provisioning.wildcard}"/>
@@ -47,7 +48,7 @@
 
             <!-- output ipa and source app descriptor !-->
             <arg value="ios/${project.name}Example.ipa"/>
-            <arg value="../bin/GameKitP2PExample-app.xml"/>
+            <arg value="../bin/../bin/${project.name}Example-app.xml"/>
 
             <!-- ANE !-->
             <arg value="-extdir"/>

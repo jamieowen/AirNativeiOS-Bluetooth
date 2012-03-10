@@ -14,13 +14,17 @@ package com.jamieowen.ane.ios.p2p {
 	public class GKPeerPickerController extends EventDispatcher
 	{
 		private var _p2p:GKPeerToPeer;
-		
+		private var _disposed:Boolean;
+		private var _shown:Boolean;
 		/**
 		* Class Constructor Description
 		*/
 		public function GKPeerPickerController($p2p:GKPeerToPeer)
 		{
-			if( !GKPeerToPeer.CREATE_GK_OBJECTS ) throw new Error("GKPeerPickerController objects must be instantiated via a GKPeerToPeer object");
+			if( !GKPeerToPeer.CREATE_GK_OBJECTS ) { throw new Error("GKPeerPickerController objects must be instantiated via a GKPeerToPeer object"); return; }
+			
+			_disposed = false;
+			_shown = false;
 			
 			_p2p = $p2p;
 			_p2p.context.addEventListener( StatusEvent.STATUS, onExtensionContextStatus );
@@ -28,11 +32,19 @@ package com.jamieowen.ane.ios.p2p {
 		
 		public function show():void
 		{
+			if( _shown ) return;
+			if( _disposed ) { throw new Error("Picker has been disposed"); return; }
+			
+			_shown = true;
 			_p2p.context.call( "gkPeerPickerController_show");
 		}
 		
 		public function dismiss():void
 		{
+			if( !_shown ) return;
+			if( _disposed ) { throw new Error("Picker has been disposed"); return; }
+			
+			_shown = false;
 			_p2p.context.call( "gkPeerPickerController_dismiss");
 		}
 		
@@ -53,15 +65,20 @@ package com.jamieowen.ane.ios.p2p {
 		
 		public function get visible():Boolean
 		{
+			if( _disposed ) { throw new Error("Picker has been disposed"); return false; }
+			
 			return _p2p.context.call( "gkPeerPickerController_get_visible") as Boolean;
 		}
 		
 		public function dispose():void
 		{
+			if( _disposed ) { throw new Error("Picker has been disposed"); return; }
+			
 			_p2p.context.call( "gkPeerPickerController_dispose");
 			_p2p.context.removeEventListener( StatusEvent.STATUS, onExtensionContextStatus );
 			_p2p.setGKPeerPickerController(null);
 			_p2p = null;
+			_disposed = true;
 		}
 		
 		protected function onExtensionContextStatus( $event:StatusEvent ):void
@@ -81,6 +98,8 @@ package com.jamieowen.ane.ios.p2p {
 					break;
 					
 				case GKPeerPickerControllerEvent.CONTROLLER_DID_CANCEL :
+					// set shown to false - calling dismiss twice on the ExtensionContext crashes the app.
+					_shown = false;
 					dispatchEvent( new GKPeerPickerControllerEvent(GKPeerPickerControllerEvent.CONTROLLER_DID_CANCEL));
 					break;
 			}

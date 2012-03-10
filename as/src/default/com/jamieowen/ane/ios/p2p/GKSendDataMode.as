@@ -6,7 +6,7 @@ package com.jamieowen.ane.ios.p2p
 	*/
 	public class GKSendDataMode 
 	{
-		public static const RELIABLE:uint 	= 0; // needs checking.
+		public static const RELIABLE:uint 	= 0;
 		public static const UNRELIABLE:uint = 1;
 		
 		/**
