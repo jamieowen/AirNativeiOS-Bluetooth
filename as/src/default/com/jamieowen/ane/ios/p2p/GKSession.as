@@ -54,10 +54,10 @@ package com.jamieowen.ane.ios.p2p {
 			return "";
 		}
 		
-		public function get sessionMode():String
+		public function get sessionMode():uint
 		{
 			// stub
-			return "";
+			return 0;
 		}
 		
 		//--//////////////////////////////////////////////////
@@ -93,20 +93,20 @@ package com.jamieowen.ane.ios.p2p {
 		//--//////////////////////////////////////////////////
 		//--//// CREATING A SESSION
 		
-		public function initWithSessionID( $id:String, $displayName:String, $sessionMode:uint = GKSessionMode.PEER ):void
+		/**public function initWithSessionID( $id:String, $displayName:String, $sessionMode:uint = GKSessionMode.PEER ):void
 		{
 			// stub
-		}
+		}**/
 		
 		//--//////////////////////////////////////////////////
 		//--//// OBTAINING INFORMATION ABOUT PEERS
 		
-		public function peersWithConnectionState( $state:uint = GKPeerConnectionState.AVAILABLE ):Vector.<String>
+		/**public function peersWithConnectionState( $state:uint = GKPeerConnectionState.AVAILABLE ):Vector.<String>
 		{
 			// stub
 			return null;
 		}
-		
+		**/
 		
 		public function displayNameForPeer($peerID:String):String
 		{
@@ -117,7 +117,7 @@ package com.jamieowen.ane.ios.p2p {
 		//--//////////////////////////////////////////////////
 		//--//// CONNECTING TO A REMOTE PEER
 		
-		public function connectToPeer($peerID:String, $timeout:Number):void
+		/**public function connectToPeer($peerID:String, $timeout:Number):void
 		{
 			// stub
 		}
@@ -125,12 +125,12 @@ package com.jamieowen.ane.ios.p2p {
 		public function cancelConnectToPeer($peerID:String):void
 		{
 			// stub
-		}
+		}**/
 		
 		//--//////////////////////////////////////////////////
 		//--//// RECEIVING CONNECTIONS FROM REMOTE PEER
 		
-		public function acceptConnectionFromPeer( $peerID:String ):Boolean
+		/**public function acceptConnectionFromPeer( $peerID:String ):Boolean
 		{
 			// stub
 			return false;
@@ -140,16 +140,16 @@ package com.jamieowen.ane.ios.p2p {
 		public function denyConnectionFromPeer( $peerID:String ):void
 		{
 			// stub
-		}
+		}**/
 		
 		//--//////////////////////////////////////////////////
 		//--//// WORKING WITH CONNECTED PEERS
 		
-		public function sendData( $data:String, $peers:Vector.<String>, $dataMode:uint = GKSendDataMode.RELIABLE ):Boolean
+		/**public function sendData( $data:String, $peers:Vector.<String>, $dataMode:uint = GKSendDataMode.RELIABLE ):Boolean
 		{
 			// stub
 			return false;
-		}
+		}**/
 		
 		public function sendDataToAllPeers( $data:String, $dataMode:uint = GKSendDataMode.RELIABLE ):Boolean
 		{
@@ -163,10 +163,10 @@ package com.jamieowen.ane.ios.p2p {
 			// stub
 		}
 		
-		public function disconnectPeerFromAllPeers( $peerID:String ):void
+		/**public function disconnectPeerFromAllPeers( $peerID:String ):void
 		{
 			// stub
-		}
+		}**/
 
 		//--//////////////////////////////////////////////////
 		//--//// DISPOSE

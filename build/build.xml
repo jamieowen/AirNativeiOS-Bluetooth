@@ -4,7 +4,7 @@
 	<property file="build.config"/>
 	<property file="${provisioning.config}"/>
 
-	<target name="all" depends="xcode,default,ios,ane" description="Full build of extension"/>
+	<target name="all" depends="xcode,default,ios,certificate,ane" description="full build"/>
 	
 	<target name="xcode" description="Build iOS Library">
 		<!--<mkdir dir="../temp/ios/build/"/>
@@ -16,9 +16,9 @@
 		</exec>!-->
 		
 		<!-- don't build with xcode just yet - just copy from release folder !-->
-		<copy file="../obj-c/AirNativeiOS-GameKitP2P/build/Debug-iphoneos/lib${project.name}.a" todir="../temp/ios" overwrite="true"/>
+		<!--<copy file="../obj-c/AirNativeiOS-GameKitP2P/build/Debug-iphoneos/lib${project.name}.a" todir="../temp/ios" overwrite="true"/>!-->
 
-		<!--<copy file="../obj-c/AirNativeiOS-GameKitP2P/build/Release-iphoneos/lib${project.name}.a" todir="../temp/ios" overwrite="true"/>!-->
+		<copy file="../obj-c/AirNativeiOS-GameKitP2P/build/Release-iphoneos/lib${project.name}.a" todir="../temp/ios" overwrite="true"/>
 		
 		<!--<delete dir="../temp/ios/build/"/>!-->
 	</target>
@@ -93,17 +93,28 @@
 		<delete file="../temp/ios/${project.name}.swc"/>
 	</target>
 	
-
+	<target name="certificate" description="generates a self signed certificate">
+		<exec executable="${sdk.air}/bin/adt" failonerror="true" dir="../temp">
+			<arg value="-certificate"/>
+			<arg value="-cn"/> 
+			<arg value="SelfSigned"/>
+			<arg value="2048-RSA"/>
+			<arg value="selfSigned.p12"/>
+			<arg value="selfSigned123456"/>
+		</exec>
+	</target>
 	
-	<target name="ane" description="Create the extension package">
+	<target name="ane" description="build">
 		<exec executable="${sdk.air}/bin/adt" failonerror="true" dir="../temp">
 			<arg value="-package"/>
-			<!--<arg value="-storetype"/>
-			<arg value="pkcs12"/>
-			<arg value="-keystore"/>
-			<arg value="${keystore.file}"/>
-			<arg value="-storepass"/>
-			<arg value="${keystore.password}"/>!-->
+
+            <arg value="-storetype"/>
+            <arg value="pkcs12"/>
+            <arg value="-keystore"/>
+            <arg value="selfSigned.p12"/>
+            <arg value="-storepass"/>
+            <arg value="selfSigned123456"/>
+
 			<arg value="-target"/>
 			<arg value="ane"/>
 			<arg value="bin/${project.name}.ane"/>

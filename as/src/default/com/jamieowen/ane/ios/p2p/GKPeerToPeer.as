@@ -38,11 +38,11 @@ package com.jamieowen.ane.ios.p2p {
 		/**
 		 * Creates a new GKSession object on the native os. If one already exists it returns that.
 		 */
-		public function createGKSession():GKSession
+		/**public function createGKSession():GKSession
 		{
 			// stub
 			return null;
-		}
+		}**/
 		
 		/**
 		 * Creates a GKPeerPickerController object on the native os.  If one already exists it returns that.

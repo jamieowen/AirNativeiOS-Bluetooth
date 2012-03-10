@@ -142,7 +142,7 @@
            peer:(NSString *)peerID 
  didChangeState:(GKPeerConnectionState)state
 {
-    NSString* message = peerID;
+    NSString* message = @"";
     
     /**
      Actionscript GKPeerConnectionState values:
@@ -172,8 +172,11 @@
             break;
     }
     
+    message = [message stringByAppendingString:@"{&}"];
+    message = [message stringByAppendingString:peerID];
+    
     // dispatch event to AIR extension context.]
-    //FREDispatchStatusEventAsync(airContext,airStatusEvent_gkSessionDataReceived, (uint8_t*) [message UTF8String] );
+    FREDispatchStatusEventAsync(airContext,airStatusEvent_gkSessionChangeState, (uint8_t*) [message UTF8String] );
 }
 
 -(void)session:(GKSession *)session connectionWithPeerFailed:(NSString *)peerID withError:(NSError *)error
@@ -186,12 +189,16 @@
     [ message appendString:error.description ];
     
     // dispatch event to AIR extension context.
+    
+    // DISABLED FOR NOW
     //FREDispatchStatusEventAsync(airContext,airStatusEvent_gkSessionDidReceiveConnectionRequestFromPeer, (uint8_t*) [message UTF8String] );
 }
 
 -(void)session:(GKSession *)session didReceiveConnectionRequestFromPeer:(NSString *)peerID
 {
     // dispatch event to AIR extension context.
+
+    // DISABLED FOR NOW
     //FREDispatchStatusEventAsync(airContext,airStatusEvent_gkSessionDidReceiveConnectionRequestFromPeer, (uint8_t*) [peerID UTF8String] );
 }
 
@@ -202,6 +209,8 @@
     [ message appendString:error.description ];
     
     // dispatch event to AIR extension context.
+    
+    // DISABLED FOR NOW
     //FREDispatchStatusEventAsync(airContext,airStatusEvent_gkSessionDidReceiveConnectionRequestFromPeer, (uint8_t*) [message UTF8String] );
 }
 

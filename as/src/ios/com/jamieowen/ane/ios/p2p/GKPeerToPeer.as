@@ -45,7 +45,7 @@ package com.jamieowen.ane.ios.p2p {
 		/**
 		 * Creates a new GKSession object on the native os. If one already exists it returns that.
 		 */
-		public function createGKSession():GKSession
+		/**public function createGKSession():GKSession
 		{
 			if( _session ) return _session;
 			
@@ -56,7 +56,7 @@ package com.jamieowen.ane.ios.p2p {
 			_context.call( "gkp2p_createGKSession");
 			
 			return _session;
-		}
+		}**/
 		
 		/**
 		 * Creates a GKPeerPickerController object on the native os.  If one already exists it returns that.

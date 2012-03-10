@@ -6,7 +6,7 @@
     <!-- main provisioning props in here !-->
     <property file="${provisioning.config}"/>
    
-    <target name="all" depends="buildswf,ipatest" description="Full build of example"/>
+    <target name="all" depends="buildswf,ipa" description="Full build of example"/>
 
     <target name="buildswf">
         <exec executable="${sdk.air}/bin/mxmlc" failonerror="true">
@@ -14,7 +14,7 @@
             <arg value="../bin/${project.name}Example.swf"/>
 
             <arg value="-source-path+=../src"/>
-            
+            <arg value="-debug=false"/>
             <arg value="-library-path+=../lib"/>
 
             <arg value="-load-config"/>
@@ -25,7 +25,7 @@
         </exec>
     </target>
 
-    <target name="ipatest">
+    <target name="ipa">
 
         <mkdir dir="ios"/>
 
@@ -35,6 +35,7 @@
             <arg value="-target"/>
             <arg value="ipa-debug-interpreter"/>
             <!--<arg value="ipa-test"/>!-->
+            <!--<arg value="ipa-debug"/>!-->
 
             <arg value="-provisioning-profile"/>
             <arg value="${provisioning.wildcard}"/>

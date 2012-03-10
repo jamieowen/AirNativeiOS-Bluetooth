@@ -13,6 +13,8 @@
 
 	<fx:Script>
 		<![CDATA[
+			import com.jamieowen.ane.ios.p2p.GKPeerConnectionState;
+			import com.jamieowen.ane.ios.p2p.GKSessionMode;
 			import caurina.transitions.Tweener;
 			import com.jamieowen.ane.ios.p2p.GKSessionEvent;
 			import com.jamieowen.ane.ios.p2p.GKPeerPickerController;
@@ -34,15 +36,12 @@
 				picker.addEventListener(GKPeerPickerControllerEvent.DID_CONNECT_PEER, onGKPeerPickerControllerEvent, false, 0, true );
 				picker.addEventListener(GKPeerPickerControllerEvent.CONTROLLER_DID_CANCEL, onGKPeerPickerControllerEvent, false, 0, true );
 				
-				status.text = "createPicker()";
-				
 			}
 			
 			private function showPicker():void
 			{
 				if( picker ) 
 				{
-					status.text = "showPicker()";
 					picker.show();
 				}
 				
@@ -51,7 +50,6 @@
 			{
 				if( picker )
 				{
-					status.text = "dismissPicker()";
 					picker.dismiss();
 				}
 			}
@@ -59,7 +57,6 @@
 			{
 				if( picker )
 				{
-					status.text = "disposePicker()";
 					picker.dismiss();
 					picker.dispose();
 					picker.removeEventListener(GKPeerPickerControllerEvent.DID_CONNECT_PEER, onGKPeerPickerControllerEvent );
@@ -75,10 +72,7 @@
 			{
 				if(p2p && p2p.session )
 				{
-					status.text = "send";
 					var success:Boolean = p2p.session.sendDataToAllPeers( $message, GKSendDataMode.RELIABLE );
-					status.text = "sendMessage:" + $message + ", result:" + success;
-					
 				}
 			}
 			
@@ -87,30 +81,104 @@
 				if( p2p.session )
 				{
 					p2p.session.removeEventListener( GKSessionEvent.DATA_RECEIVED, onGKSessionEvent );
+					p2p.session.removeEventListener( GKSessionEvent.DID_CHANGE_STATE, onGKSessionEvent );
+					p2p.session.removeEventListener( StatusEvent.STATUS, onStatusEvent );
+					
+					p2p.session.dispose();
 				}
+			}
+			
+			private function disconnectFromAllPeers():void
+			{
+				if( p2p.session )
+				{
+					p2p.session.disconnectFromAllPeers();
+					displayPeerInfo( "none", "none", "none");
+				}
+			}
+			
+			private function availableCheck():void
+			{
+				if( p2p.session )
+				{
+					p2p.session.available = !p2p.session.available;
+				}
+			}
+			
+			private function displayPeerState( $sessionState:uint ):String
+			{
+				switch( $sessionState )
+				{
+					case GKPeerConnectionState.AVAILABLE :
+						return "AVAILABLE";
+						break;
+					case GKPeerConnectionState.CONNECTED :
+						return "CONNECTED";
+						break;
+					case GKPeerConnectionState.CONNECTING :
+						return "CONNECTING";
+						break;
+					case GKPeerConnectionState.DISCONNECTED :
+						return "DISCONNECTED";
+						break;					
+					case GKPeerConnectionState.UNAVAILABLE :
+						return "UNAVAILABLE";
+						break;
+				}
+				return "";
+			}
+			
+			private function displaySessionMode( $sessionMode:uint ):String
+			{
+				switch( $sessionMode )
+				{
+					case GKSessionMode.CLIENT :
+						return "CLIENT";
+						break;
+					case GKSessionMode.PEER :
+						return "PEER";
+						break;
+					case GKSessionMode.SERVER :
+						return "SERVER";
+						break;
+				}
+				
+				return "";
+			}
+			
+			private function displayPeerInfo( $peerID:String, $state:String, $displayName:String ):void
+			{
+				peerInfo1.text = "connected to:" + $displayName; 
+				peerInfo2.text = "id:" + $peerID + ", state:" + $state; 
 			}
 			
 			protected function onGKPeerPickerControllerEvent( $event:GKPeerPickerControllerEvent ):void
 			{
-				status.text = "onPeerPickerEvent()";
-				peerID.text = "";
-				
 				// dismiss and dispose - if the controller only cancelled, then you could just dismiss if the user was likely to choose again.
 				disposePicker();
 				
 				switch( $event.type )
 				{
 					case GKPeerPickerControllerEvent.DID_CONNECT_PEER :
-						pickerResult.text = "connected";
-						peerID.text = $event.peerID;
+						displayPeerInfo( $event.peerID,displayPeerState( GKPeerConnectionState.CONNECTED ), p2p.session.displayNameForPeer($event.peerID) );
 						
 						// session is now accessible -
 						p2p.session.addEventListener( GKSessionEvent.DATA_RECEIVED, onGKSessionEvent );
+						p2p.session.addEventListener( GKSessionEvent.DID_CHANGE_STATE, onGKSessionEvent );
 						p2p.session.addEventListener( StatusEvent.STATUS, onStatusEvent );
-
+						
+						// test getters / get session info
+						
+						myInfo1.text = "myID:" + p2p.session.peerID;
+						myInfo2.text = "session:" + p2p.session.sessionID.slice(0,20) + "...";
+						myInfo3.text = "available:" + p2p.session.available;
+						myInfo4.text = "sessionMode:" + displaySessionMode(p2p.session.sessionMode);
+						
+						availableBox.selected = p2p.session.available;
+						
 						break;
 					case GKPeerPickerControllerEvent.CONTROLLER_DID_CANCEL :
-						pickerResult.text = "cancelled";
+						displayPeerInfo( "none", "none", "none");
 						break;
 				}
 				
@@ -166,13 +234,11 @@
 			
 			protected function onGKSessionEvent($event:GKSessionEvent):void
 			{
-				status.text = "onGKSessionEvent()";
 				var value:uint = 0;
 				switch( $event.type )
 				{
 					case GKSessionEvent.DATA_RECEIVED :
 						
-						peerID.text = $event.peerID;
 						dataResult.text = $event.data;
 						
 						if( $event.data.indexOf("slider_") == 0 )
@@ -201,23 +267,27 @@
 						}
 						
 						break;
+						
+					case GKSessionEvent.DID_CHANGE_STATE : // NOTIFIES IF A PEER HAS CHANGED STATE
+						displayPeerInfo( $event.peerID,displayPeerState( $event.sessionState ), p2p.session.displayNameForPeer($event.peerID) );
+						break;
 				}
 			}
 		]]>
 	</fx:Script>
 		<s:Label width="100%" id="exstatus" text="(extstatus)"/>
-		<s:Label width="100%" id="status" text="(status)"/>
 		<s:HGroup width="100%">
-			<s:Button label="Create" click="createPicker()"/>
-			<s:Button label="Show" click="showPicker()"/>
-			<s:Button label="Dismiss" click="dismissPicker()"/>
-			<s:Button label="Dispose" click="disposePicker()"/>
+			<s:Button label="Create" click="createPicker()" width="25%"/>
+			<s:Button label="Show" click="showPicker()" width="25%"/>
+			<s:Button label="Dismiss" click="dismissPicker()" width="25%"/>
+			<s:Button label="Dispose" click="disposePicker()" width="25%"/>
 		</s:HGroup>
-		<s:Label width="100%" id="pickerResult" text="(picker result)"/>
-		<s:HGroup width="100%">
-			<s:Label text="Peer Id:"/>
-			<s:Label width="100%" id="peerID"/>
-		</s:HGroup>
+		<s:Label width="100%" id="peerInfo1" text="(peer info here, line 1)"/>
+		<s:Label width="100%" id="peerInfo2" text="(peer info here, line 2)"/>
+		<s:Label width="100%" id="myInfo1" text="(my info here, line 1)"/>
+		<s:Label width="100%" id="myInfo2" text="(my info here, line 2)"/>
+		<s:Label width="100%" id="myInfo3" text="(my info here, line 3)"/>
+		<s:Label width="100%" id="myInfo4" text="(my info here, line 4)"/>
 		<s:HGroup width="100%">
 			<s:TextInput id="messageInput" text="Message" width="100%"/>
 			<s:Button click="{sendMessage(messageInput.text);}" label="Send"/>
@@ -230,6 +300,11 @@
 		<s:HSlider id="slider" width="100%" value="0" stepSize="1" minimum="0" maximum="200" change="sliderChange()"/>
 		<s:HGroup width="100%">
 			<s:Button click="changeTween()" id="tweenButton" label="Start" />
-			<s:HSlider id="tween" enabled="false" width="100%" value="0" minimum="0" maximum="200"/>
+			<s:HSlider id="tween" width="100%" value="0" minimum="0" maximum="200"/>
+			<s:CheckBox label="" click="availableCheck()" id="availableBox"/>
 		</s:HGroup>
+		<s:HGroup width="100%">
+			<s:Button label="Disconnect" click="disconnectFromAllPeers()" width="50%"/>
+			<s:Button label="Dispose" click="disposeSession()" width="50%"/>
+		</s:HGroup>		
 </s:View>
