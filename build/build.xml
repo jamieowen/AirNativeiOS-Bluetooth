@@ -128,8 +128,8 @@
 		<copy file="../temp/bin/${project.name}.swc" todir="../bin"/>
 
 		<!-- update examples !-->
-		<copy file="../temp/bin/${project.name}.ane" todir="../examples/GameKitP2PExample/lib"/>
-		<copy file="../temp/bin/${project.name}.swc" todir="../examples/GameKitP2PExample/lib"/>		
+		<copy file="../temp/bin/${project.name}.ane" todir="../examples/GameKitP2PExample/lib_ext"/>
+		<copy file="../temp/bin/${project.name}.swc" todir="../examples/GameKitP2PExample/lib_ext"/>		
 
 		<delete dir="../temp"/>
 	</target>

@@ -16,6 +16,7 @@
             <arg value="-source-path+=../src"/>
             <arg value="-debug=false"/>
             <arg value="-library-path+=../lib"/>
+            <arg value="-external-library-path+=../lib_ext"/>
 
             <arg value="-load-config"/>
             <arg value="${sdk.air}/frameworks/airmobile-config.xml"/>
@@ -33,7 +34,8 @@
             <arg value="-package"/>
 
             <arg value="-target"/>
-            <arg value="ipa-debug-interpreter"/>
+            <arg value="ipa-ad-hoc"/>
+            <!--<arg value="ipa-debug-interpreter"/>!-->
             <!--<arg value="ipa-test"/>!-->
             <!--<arg value="ipa-debug"/>!-->
 
@@ -53,7 +55,7 @@
 
             <!-- ANE !-->
             <arg value="-extdir"/>
-            <arg value="../lib"/>
+            <arg value="../lib_ext"/>
 
             <!-- bundle contents !-->
             <arg value="-C"/> <!-- -C uses the proceeding path for the named assets !-->
