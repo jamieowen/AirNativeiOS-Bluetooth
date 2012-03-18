@@ -49,7 +49,7 @@ http://www.youtube.com/watch?v=Tdh0DBYAtOo
 
 ## Improvements 
 
-The full features of the GKSession object are implemented in Actionscript and C/Objective-C side but are commented out at the moment until I get a chance to test properly.  Please feel free to fork this repository and uncomment the code.  Let me know if you test and finish it! The additional features would enable :
+The full features of the GKSession object are implemented in Actionscript and C/Objective-C side but are commented out at the moment until I get a chance to test properly (testing bluetooth takes longer than usual!).  Please feel free to fork this repository and uncomment the code.  Let me know if you test and finish it! The additional features would enable :
 
 * Establishing a GKSession manually with possibilty to connect to multiple peers.
 * Building a custom peer picker interface to show available peers.
