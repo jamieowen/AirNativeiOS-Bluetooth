@@ -12,10 +12,13 @@ package com.jamieowen.ane.ios.p2p
 		// (equivalent to GKSessionDelegate methods)
 		public static const DID_CHANGE_STATE:String 						= "gkSessionChangeState";
 		public static const DID_RECEIVE_CONNECTION_REQUEST_FROM_PEER:String = "gkSessionDidReceiveConnectionRequestFromPeer";
+		public static const CONNECTION_WITH_PEER_FAILED:String				= "gkSessionConnectionWithPeerFailed";
+		public static const DID_FAIL_WITH_ERROR:String 						= "gkSessionDidFailWithError";
 				
 		// (equivalent to GKSession.setDataReceiveHandler)
 		public static const DATA_RECEIVED:String							= "gkSessionDataReceived";
 		
+		// peer id ( for peer related events )
 		public var peerID:String;
 		
 		// session state / passed with DID_CHANGE_STATE

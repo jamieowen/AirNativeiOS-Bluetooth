@@ -3,6 +3,7 @@ bin-debug/
 bin-release/
 bin/
 libs/
+examples/starling-feathers-example/bin
 
 # Project property files
 .actionScriptProperties

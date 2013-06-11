@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension xmlns="http://ns.adobe.com/air/extension/3.1">
+<extension xmlns="http://ns.adobe.com/air/extension/3.7">
 	<id>com.jamieowen.ane.ios.p2p.GKPeerToPeer</id>
 	<versionNumber>0.5.0</versionNumber>
 	<platforms>
@@ -10,6 +10,13 @@
 				<finalizer>GameKitP2PExtensionFinalizer</finalizer>
 			</applicationDeployment>
 		</platform>
+		<!--<platform name="iPhone-x86">
+			<applicationDeployment>
+				<nativeLibrary>libAirNativeiOS-GameKitP2P.a</nativeLibrary>
+				<initializer>GameKitP2PExtensionInitializer</initializer>
+				<finalizer>GameKitP2PExtensionFinalizer</finalizer>
+			</applicationDeployment>
+		</platform>!-->		
 		<platform name="default">
 			<applicationDeployment/>
 		</platform>

@@ -123,13 +123,12 @@ package com.jamieowen.ane.ios.p2p {
 		//--//////////////////////////////////////////////////
 		//--//// OBTAINING INFORMATION ABOUT PEERS
 		
-		/**public function peersWithConnectionState( $state:uint = GKPeerConnectionState.AVAILABLE ):Vector.<String>
+		public function peersWithConnectionState( $state:uint = GKPeerConnectionState.AVAILABLE ):Vector.<String>
 		{
 			if( _disposed ) { throw new Error("GKSession has been disposed"); return null; }
 			
 			return _p2p.context.call( "gkSession_peersWithConnectionState", $state ) as Vector.<String>;
 		}
-		**/
 		
 		public function displayNameForPeer($peerID:String):String
 		{
@@ -185,7 +184,7 @@ package com.jamieowen.ane.ios.p2p {
 		//--//////////////////////////////////////////////////
 		//--//// WORKING WITH CONNECTED PEERS
 		
-		/**public function sendData( $data:String, $peers:Vector.<String>, $dataMode:uint = GKSendDataMode.RELIABLE ):Boolean
+		/**public function sendData( $data:String, $peers:Vector.<String>, $dataMode:uint = 0 ):Boolean
 		{
 			if( _disposed ) { throw new Error("GKSession has been disposed"); return false; }
 			
@@ -204,7 +203,7 @@ package com.jamieowen.ane.ios.p2p {
 			return result;
 		}**/
 		
-		public function sendDataToAllPeers( $data:String, $dataMode:uint = GKSendDataMode.RELIABLE ):Boolean
+		public function sendDataToAllPeers( $data:String, $dataMode:uint = 0 ):Boolean
 		{
 			if( _disposed ) { throw new Error("GKSession has been disposed"); return false; }
 			

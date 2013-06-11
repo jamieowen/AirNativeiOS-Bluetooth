@@ -10,10 +10,10 @@
 #define AirNativeiOS_GameKitP2P_AirNativeiOS_AirStatusEventCodes_h
 
 // GKSessionDelegate
-#define airStatusEvent_gkSessionConnectionWithPeerFailed "gkSessionConnectionWithPeerFailed"
-#define airStatusEvent_gkSessionDidFailWithError "gkSessionDidFailWithError"
 #define airStatusEvent_gkSessionChangeState "gkSessionChangeState"
 #define airStatusEvent_gkSessionDidReceiveConnectionRequestFromPeer "gkSessionDidReceiveConnectionRequestFromPeer"
+#define airStatusEvent_gkSessionConnectionWithPeerFailed "gkSessionConnectionWithPeerFailed"
+#define airStatusEvent_gkSessionDidFailWithError "gkSessionDidFailWithError"
 
 // GKSession ReceiveData
 #define airStatusEvent_gkSessionDataReceived "gkSessionDataReceived"

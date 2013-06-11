@@ -101,12 +101,12 @@ package com.jamieowen.ane.ios.p2p {
 		//--//////////////////////////////////////////////////
 		//--//// OBTAINING INFORMATION ABOUT PEERS
 		
-		/**public function peersWithConnectionState( $state:uint = GKPeerConnectionState.AVAILABLE ):Vector.<String>
+		public function peersWithConnectionState( $state:uint = GKPeerConnectionState.AVAILABLE ):Vector.<String>
 		{
 			// stub
 			return null;
 		}
-		**/
+		
 		
 		public function displayNameForPeer($peerID:String):String
 		{
@@ -145,13 +145,13 @@ package com.jamieowen.ane.ios.p2p {
 		//--//////////////////////////////////////////////////
 		//--//// WORKING WITH CONNECTED PEERS
 		
-		/**public function sendData( $data:String, $peers:Vector.<String>, $dataMode:uint = GKSendDataMode.RELIABLE ):Boolean
+		/**public function sendData( $data:String, $peers:Vector.<String>, $dataMode:uint = 0 ):Boolean
 		{
 			// stub
 			return false;
 		}**/
 		
-		public function sendDataToAllPeers( $data:String, $dataMode:uint = GKSendDataMode.RELIABLE ):Boolean
+		public function sendDataToAllPeers( $data:String, $dataMode:uint = 0 ):Boolean
 		{
 			// stub
 			return false;

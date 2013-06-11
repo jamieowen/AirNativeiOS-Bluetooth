@@ -199,6 +199,7 @@ FREObject gkSession_initWithSessionID(FREContext ctx, void* funcData, uint32_t a
     
     return NULL;
 }
+**/
 
 FREObject gkSession_peersWithConnectionState(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
@@ -217,7 +218,7 @@ FREObject gkSession_peersWithConnectionState(FREContext ctx, void* funcData, uin
     // public static const DISCONNECTED:uint = 3;
     // public static const UNAVAILABLE:uint	 = 4;
     
-    NSArray* peers;
+    NSArray *peers = NULL;
     
     switch( state )
     {
@@ -240,51 +241,46 @@ FREObject gkSession_peersWithConnectionState(FREContext ctx, void* funcData, uin
     
     // convert to Actionscript Vector.<String>
     
+    
+    
+    
     FREObject resultVector;
     FRENewObject((const uint8_t*)"Vector.<String>", 0, NULL, &resultVector, nil);
-    // set the vector length
-    uint32_t vecLength = (uint32_t) [peers count];
-    FRESetArrayLength( &resultVector, vecLength);
-    
-    // pointers
-    const char *peerIDChars;
-    NSString* peerIDStr;
-    
-    for( NSUInteger i = 0; i<[ peers count ]; i++ )
-    {
-        FREObject peerID;
+    FRESetArrayLength( resultVector, peers.count );
 
-        peerIDStr = [ peers objectAtIndex:i ];
-        peerIDChars = [ peerIDStr UTF8String ];
-        FRENewObjectFromUTF8(strlen(peerIDChars)+1, (const uint8_t*)peerIDChars, &peerID );
+    NSString *peerID = NULL;
+    
+    for( NSUInteger i = 0; i<peers.count; i++ )
+    {
+        FREObject peerIDResult;
+        peerID = [ peers objectAtIndex:i ];
         
-        FRESetArrayElementAt(resultVector, (uint32_t) i, peerID);
+        FRENewObjectFromUTF8(peerID.length, (const uint8_t*)peerID.UTF8String, &peerIDResult );
+        
+        FRESetArrayElementAt(resultVector, i, peerIDResult);
     }
     
     return resultVector;
 }
-**/
+
 
 FREObject gkSession_displayNameForPeer(FREContext ctx, void* funcData, uint32_t argc, FREObject argv[])
 {
     if( !gkImpl.isSessionOK ) return NULL;
     
-    // @params peerID:String
-    // @return displayName:String
+    uint32_t peerIDLength;
+    const uint8_t *peerIDFromAs;
+    FREGetObjectAsUTF8(argv[0], &peerIDLength, &peerIDFromAs );
     
-    uint32_t peerIDLen;
-    const uint8_t *peerIDChars;   
-    FREGetObjectAsUTF8(argv[0], &peerIDLen, &peerIDChars );
-    
-    NSString *peerID = [NSString stringWithUTF8String:(char*)peerIDChars];
+    NSString *peerID = [NSString stringWithUTF8String:(char*)peerIDFromAs];
     
     NSString *displayName = [ gkImpl.currentSession displayNameForPeer:peerID ];
 
-    const char *chars = [displayName UTF8String];
-    FREObject result;
-    FRENewObjectFromUTF8( strlen(chars)+1, (const uint8_t*)chars, &result);
+    const char *displayNameAsChar = [displayName UTF8String];
+    FREObject displayNameResult;
+    FRENewObjectFromUTF8( strlen(displayNameAsChar)+1, (const uint8_t*)displayNameAsChar, &displayNameResult);
     
-    return result;
+    return displayNameResult;
 }
 
 /**
@@ -574,9 +570,9 @@ void ContextInitializer(void* extData, const uint8_t* ctxType,
     // create the gamekit delegate
     gkImpl = [[AirNativeiOS_GKImpl alloc] initWithContext:ctx];
     
-    *numFunctionsToTest = 17;//26;
+    *numFunctionsToTest = 18;//26;
     
-    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction)*29);
+    FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction)*18);
     
     //////////////////
     // GKPeer2Peer (as)
@@ -627,14 +623,14 @@ void ContextInitializer(void* extData, const uint8_t* ctxType,
     func[10].name         = (const uint8_t*) "gkSession_initWithSessionID";
     func[10].functionData  = NULL;
     func[10].function     = &gkSession_initWithSessionID;
-    
-    func[11].name         = (const uint8_t*) "gkSession_peersWithConnectionState";
-    func[11].functionData  = NULL;
-    func[11].function     = &gkSession_peersWithConnectionState;
     **/
-    func[9].name         = (const uint8_t*) "gkSession_displayNameForPeer";
+    func[9].name         = (const uint8_t*) "gkSession_peersWithConnectionState";
     func[9].functionData  = NULL;
-    func[9].function     = &gkSession_displayNameForPeer;
+    func[9].function     = &gkSession_peersWithConnectionState;
+
+    func[10].name         = (const uint8_t*) "gkSession_displayNameForPeer";
+    func[10].functionData  = NULL;
+    func[10].function     = &gkSession_displayNameForPeer;
     /**
     func[13].name         = (const uint8_t*) "gkSession_connectToPeer";
     func[13].functionData  = NULL;
@@ -656,29 +652,29 @@ void ContextInitializer(void* extData, const uint8_t* ctxType,
     func[17].functionData = NULL;
     func[17].function     = &gkSession_sendData;
     **/
-    func[10].name         = (const uint8_t*) "gkSession_sendDataToAllPeers";
-    func[10].functionData = NULL;
-    func[10].function     = &gkSession_sendDataToAllPeers;
-   
-    func[11].name         = (const uint8_t*) "gkSession_disconnectFromAllPeers";
+    func[11].name         = (const uint8_t*) "gkSession_sendDataToAllPeers";
     func[11].functionData = NULL;
-    func[11].function     = &gkSession_disconnectFromAllPeers;
+    func[11].function     = &gkSession_sendDataToAllPeers;
+   
+    func[12].name         = (const uint8_t*) "gkSession_disconnectFromAllPeers";
+    func[12].functionData = NULL;
+    func[12].function     = &gkSession_disconnectFromAllPeers;
     /**
     func[20].name         = (const uint8_t*) "gkSession_disconnectPeerFromAllPeers";
     func[20].functionData = NULL;
     func[20].function     = &gkSession_disconnectPeerFromAllPeers;
     **/
-    func[12].name         = (const uint8_t*) "gkSession_dispose";
-    func[12].functionData = NULL;
-    func[12].function     = &gkSession_dispose;
-    
-    func[13].name         = (const uint8_t*) "gkPeerPickerController_show";
+    func[13].name         = (const uint8_t*) "gkSession_dispose";
     func[13].functionData = NULL;
-    func[13].function     = &gkPeerPickerController_show;
+    func[13].function     = &gkSession_dispose;
     
-    func[14].name         = (const uint8_t*) "gkPeerPickerController_dismiss";
+    func[14].name         = (const uint8_t*) "gkPeerPickerController_show";
     func[14].functionData = NULL;
-    func[14].function     = &gkPeerPickerController_dismiss;
+    func[14].function     = &gkPeerPickerController_show;
+    
+    func[15].name         = (const uint8_t*) "gkPeerPickerController_dismiss";
+    func[15].functionData = NULL;
+    func[15].function     = &gkPeerPickerController_dismiss;
     
     //func[25].name         = (const uint8_t*) "gkPeerPickerController_get_connectionTypesMask";
     //func[25].functionData = NULL;
@@ -688,13 +684,13 @@ void ContextInitializer(void* extData, const uint8_t* ctxType,
     //func[26].functionData = NULL;
     //func[26].function     = &gkPeerPickerController_set_connectionTypesMask;
     
-    func[15].name         = (const uint8_t*) "gkPeerPickerController_get_visible";
-    func[15].functionData = NULL;
-    func[15].function     = &gkPeerPickerController_get_visible;
-    
-    func[16].name         = (const uint8_t*) "gkPeerPickerController_dispose";
+    func[16].name         = (const uint8_t*) "gkPeerPickerController_get_visible";
     func[16].functionData = NULL;
-    func[16].function     = &gkPeerPickerController_dispose;
+    func[16].function     = &gkPeerPickerController_get_visible;
+    
+    func[17].name         = (const uint8_t*) "gkPeerPickerController_dispose";
+    func[17].functionData = NULL;
+    func[17].function     = &gkPeerPickerController_dispose;
     
     *functionsToSet = func;
 }

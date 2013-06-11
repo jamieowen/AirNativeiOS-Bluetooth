@@ -41,7 +41,7 @@
 		C99E61C715050204005ABF52 /* AirNativeiOS-GameKitP2P.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AirNativeiOS-GameKitP2P.m"; sourceTree = "<group>"; };
 		C99E61CE1505023E005ABF52 /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FlashRuntimeExtensions.h; path = "../../../../../../libraries/sdks/air3-2_p6_sdk_mac_022712/include/FlashRuntimeExtensions.h"; sourceTree = "<group>"; };
 		C99E61D015053A22005ABF52 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
-		C9B4B78515092DF400C7C9AC /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FlashRuntimeExtensions.h; path = ../../../../../libraries/sdks/air3_2_022712_flex_sdk_4.6.0.23201/include/FlashRuntimeExtensions.h; sourceTree = "<group>"; };
+		C9B4B78515092DF400C7C9AC /* FlashRuntimeExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FlashRuntimeExtensions.h; path = ../../../../../libraries/sdks/adobe/air_3.7_final_fx46/include/FlashRuntimeExtensions.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -394,6 +394,7 @@
 				C9521E47150A4543006C84E2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C99E61B815050204005ABF52 /* Build configuration list for PBXProject "AirNativeiOS-GameKitP2P" */ = {
 			isa = XCConfigurationList;

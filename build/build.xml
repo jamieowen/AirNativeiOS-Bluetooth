@@ -19,6 +19,7 @@
 		<!--<copy file="../obj-c/AirNativeiOS-GameKitP2P/build/Debug-iphoneos/lib${project.name}.a" todir="../temp/ios" overwrite="true"/>!-->
 
 		<copy file="../obj-c/AirNativeiOS-GameKitP2P/build/Release-iphoneos/lib${project.name}.a" todir="../temp/ios" overwrite="true"/>
+		<!--<copy file="../obj-c/AirNativeiOS-GameKitP2P/build/Release-iphonesimulator/lib${project.name}.a" todir="../temp/ios" overwrite="true"/>!-->
 		
 		<!--<delete dir="../temp/ios/build/"/>!-->
 	</target>
@@ -38,7 +39,7 @@
 		<exec executable="${sdk.air}/bin/compc" failonerror="true">
 			<arg line='-source-path ../as/src/default'/>
 			<arg line='-output ../temp/default/${project.name}.swc'/>
-			<!--<arg line='-swf-version=13'/>!-->
+			<arg line='-swf-version=20'/>
 			<arg line='-external-library-path+="${sdk.air}/frameworks/libs/air/airglobal.swc"'/>
 			<!--<arg line='-library-path+="../libs/"'/>!-->
 			<arg line='-include-classes ${classlist2}'/>
@@ -79,7 +80,7 @@
 		<exec executable="${sdk.air}/bin/compc" failonerror="true">
 			<arg line='-source-path ../temp/ios/src'/>
 			<arg line='-output ../temp/ios/${project.name}.swc'/>
-			<!--<arg line='-swf-version=13'/>!-->
+			<arg line='-swf-version=20'/>
 			<arg line='-external-library-path+="${sdk.air}/frameworks/libs/air/airglobal.swc"'/>
 			<!--<arg line='-library-path+="../libs/"'/>!-->
 			<arg line='-include-classes ${classlist}'/>
@@ -94,7 +95,7 @@
 	</target>
 	
 	<target name="certificate" description="generates a self signed certificate">
-		<exec executable="${sdk.air}/bin/adt" failonerror="true" dir="../temp">
+		<exec executable="${sdk.air}/bin/adt" failonerror="true" dir="">
 			<arg value="-certificate"/>
 			<arg value="-cn"/> 
 			<arg value="SelfSigned"/>
@@ -121,15 +122,19 @@
 			<arg value="../build/extension.xml"/>
 			<arg line="-swc bin/${project.name}.swc"/>
 			<arg line="-platform iPhone-ARM -platformoptions ../build/platform.xml -C ios/ ."/>
+			<!--<arg line="-platform iPhone-x86 -platformoptions ../build/platform.xml -C ios/ ."/>!-->
 			<arg line="-platform default -C default/ ."/>
 		</exec>
 		
+		<copy file="../temp/selfSigned.p12" todir="../build"/>
 		<copy file="../temp/bin/${project.name}.ane" todir="../bin"/>
 		<copy file="../temp/bin/${project.name}.swc" todir="../bin"/>
 
 		<!-- update examples !-->
 		<copy file="../temp/bin/${project.name}.ane" todir="../examples/GameKitP2PExample/lib_ext"/>
-		<copy file="../temp/bin/${project.name}.swc" todir="../examples/GameKitP2PExample/lib_ext"/>		
+		<copy file="../temp/bin/${project.name}.swc" todir="../examples/GameKitP2PExample/lib_ext"/>	
+		<copy file="../temp/bin/${project.name}.ane" todir="../examples/starling-feathers-example/lib_ext"/>
+		<copy file="../temp/bin/${project.name}.swc" todir="../examples/starling-feathers-example/lib_ext"/>		
 
 		<delete dir="../temp"/>
 	</target>

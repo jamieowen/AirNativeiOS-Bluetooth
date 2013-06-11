@@ -97,7 +97,7 @@
     [session setDataReceiveHandler:self withContext:nil];
     
     // dispatch event to AIR extension context
-    FREDispatchStatusEventAsync( airContext, airStatusEvent_gkPeerPickerDidConnectPeer, (uint8_t*) [peerID UTF8String] );
+    FREDispatchStatusEventAsync( airContext, (uint8_t*)airStatusEvent_gkPeerPickerDidConnectPeer, (uint8_t*)[peerID UTF8String] );
 
     // the AIR side should dispose the picker now
 }
@@ -111,7 +111,7 @@
 -(void)peerPickerControllerDidCancel:(GKPeerPickerController *)picker
 {
     // dispatch event to AIR extension context
-    FREDispatchStatusEventAsync( airContext, airStatusEvent_gkPeerPickerControllerDidCancel, "" );
+    FREDispatchStatusEventAsync( airContext, (uint8_t*)airStatusEvent_gkPeerPickerControllerDidCancel, (uint8_t*)"" );
     
     // the AIR side should dispose the picker now.
 }
@@ -131,7 +131,7 @@
     message = [message stringByAppendingString:peer];
     
     // dispatch event to AIR extension context.
-    FREDispatchStatusEventAsync( airContext, airStatusEvent_gkSessionDataReceived, (uint8_t*)[message UTF8String] );
+    FREDispatchStatusEventAsync( airContext, (uint8_t*)airStatusEvent_gkSessionDataReceived, (uint8_t*)[message UTF8String] );
 }
 
 
@@ -176,7 +176,7 @@
     message = [message stringByAppendingString:peerID];
     
     // dispatch event to AIR extension context.]
-    FREDispatchStatusEventAsync(airContext,airStatusEvent_gkSessionChangeState, (uint8_t*) [message UTF8String] );
+    FREDispatchStatusEventAsync(airContext,(uint8_t*)airStatusEvent_gkSessionChangeState, (uint8_t*) [message UTF8String] );
 }
 
 -(void)session:(GKSession *)session connectionWithPeerFailed:(NSString *)peerID withError:(NSError *)error
